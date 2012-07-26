@@ -85,22 +85,40 @@ def processFabFile(fabfile):
     pathstack=[]
     
     #Populate Materials
-    for materialTag in doc.getroot().findall("materialCalibration"):
-        material = Material(materialTag.findall("name")[0].text)
+    for materialTag in doc.getroot().findall("material"):
+        material = Material(materialTag.find("id").text)
         for propertyTag in materialTag.getchildren(): material.setProperty(propertyTag.tag, propertyTag.text)
         materials[material.name]=material
         
     #Make Path Stack
-    for element in doc.getiterator():
-        if ("path" == element.tag.lower()):
-            path=Path(element.findall("materialCalibrationName")[0].text)
+#    for element in doc.getiterator():
+#        if ("path" == element.tag.lower()):
+#            matids = element.findall("materialID")
+#            print matids
+#            if (0!=len(matids)):
+#                path=Path(matids[0].text)
+#                pathstack.append(path)
+#        elif("point"==element.tag.lower()):
+#            x = float(element.findall("x")[0].text)
+#            y = float(element.findall("y")[0].text)
+#            z = float(element.findall("z")[0].text)
+#            p=Point(x, y, z)
+#            pathstack[-1].appendPoint(p)
+            
+            
+    for pathel in doc.getiterator("path"):
+        matids = pathel.findall("materialid")
+        if (0!=len(matids)):
+            path=Path(matids[0].text)
             pathstack.append(path)
-        elif("point"==element.tag.lower()):
-            x = float(element.findall("x")[0].text)
-            y = float(element.findall("y")[0].text)
-            z = float(element.findall("z")[0].text)
-            p=Point(x, y, z)
-            pathstack[-1].appendPoint(p)
+            
+            for point in pathel.getiterator("point"):
+                x = float(point.find("x").text)
+                y = float(point.find("y").text)
+                z = float(point.find("z").text)
+                p=Point(x, y, z)
+                pathstack[-1].appendPoint(p)
+    
     return (materials, pathstack)
 
 

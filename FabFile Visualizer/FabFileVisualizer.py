@@ -163,7 +163,9 @@ class FabFileVisualizer(QWidget,  Ui_LayerViewWidget):
             for path in self.layers[layerInt]:
             
                 materialName = path.getMaterial()
-                color = self.matColors[materialName]
+                print materialName
+                print self.matColors
+                color = QColor(Qt.black) #self.matColors[materialName]
     
                 if self.showWidth:
                     width = self.materials[materialName].getPropertyValue("pathWidth")
