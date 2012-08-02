@@ -149,7 +149,16 @@ def dimensions(fabTree, name=None):
     return (minvalues,maxvalues)
     
     
-
+def startpath(fabTree, number):
+    root = fabTree.getroot()
+    cmd = root.find("commands")
+    i = 0;
+    for path in fabTree.getiterator("path"):
+        i= i+1
+        if (i < number):
+            print "removed ",i 
+            cmd.remove(path)
+    return fabTree
 
 
 
@@ -202,4 +211,9 @@ if __name__ == '__main__':
         (minvalues,maxvalues) = dimensions(fabTree)
         print minvalues,maxvalues
 
+    elif todo == "startpath":
+        number = float(sys.argv[3])
+        fabTree=startpath(fabTree,number)
+        fabTree.write(sys.argv[2])
+        
 
