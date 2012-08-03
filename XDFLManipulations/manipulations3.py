@@ -31,6 +31,7 @@ This file is part of the Fab@Home Project.
 
 
 from xml.etree.ElementTree import ElementTree 
+import xml.etree.ElementTree as etree
 from math import cos, sin, pi
 
 def transformPoint(transformation, point):
@@ -151,61 +152,82 @@ def startpath(fabTree, number):
             cmd.remove(path)
     return fabTree
 
-if __name__ == '__main__':
 
-    import sys
-    todo = sys.argv[1]
-    
-    if todo== "help":
-        print "\ntranslate - manipulations.py translate 'file name' x y z "
-        print "\nthreshold  - manipulations.py threshold 'file name' ('write name')"
-    else:
+if __name__ == '__main__':
+	import sys
+	todo = sys.argv[1]
+
+	def print_error():
+		print "Incorrect number of arguments"
+		print todo
+	 	print sys.argv
+
+	def writeTree(output_file, tree):
+
+		f = open(output_file, 'w')
+		f.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?> \n")
+		string = etree.tostring(tree.getroot())
+		f.write(string)
+		f.close()
+
+	if todo== "help":
+		print "\ntranslate - manipulations.py translate 'file name' x y z 'write name'"
+		print "\nthreshold  - manipulations.py threshold 'file name' ('write name')"
+		print "\nrotate - manipulations.py rotate 'file name' theta 'write name'"
+		print "\nparity - manipulations.py parity 'file name' 'write name'"
+		print "\nstartpath - manipulations.py  startpath 'file name' index 'write name' "
+		print "\nscale - manipulations.py scale 'filename' x y z 'write name' "
+		
+	else:
 		fabTree = ElementTree(file = sys.argv[2])
 		for el in fabTree.iter(): el.tag = el.tag.lower()
     
-    
-    if todo == "threshold":
+	if todo == "threshold":
         #threshold fabFile NewFab
-        fabTree = threshold(fabTree)
-        if len(sys.argv)>3:fabTree.write(sys.argv[3])
-        else:fabTree.write(sys.argv[2])
+		fabTree = threshold(fabTree)
+		if len(sys.argv)>3: fabTree.write(sys.argv[3])
+		else: writeTree(sys.argv[2], fabTree)	
         
-    elif todo == "translate":
-        #translate fabfile x yz
-        if len(sys.argv)>5:
-            x = float(sys.argv[3])
-            y = float(sys.argv[4])
-            z = float(sys.argv[5])
-            fabTree=translate(fabTree, x, y, z)
-            fabTree.write(sys.argv[2])
-        else:
-            print "Incorrect number of arguments"
-            print todo
-            print sys.argv
+	elif todo == "translate":
+		#translate fabfile x yz
+		if len(sys.argv)>6:
+			x = float(sys.argv[3])
+			y = float(sys.argv[4])
+			z = float(sys.argv[5])
+			fabTree=translate(fabTree, x, y, z)
+			writeTree(sys.argv[6], fabTree)	
+		else: print_error()
     
-    elif todo == "rotate":
-        # rotate XDFL file 
-        if len(sys.argv)>2:
-            theta = float(sys.argv[3])
-            fabTree=rotate(fabTree, theta)
-            fabTree.write(sys.argv[2])
-        else:
-            print "Incorrect number of arguments"
-            print todo
-            print sys.argv
+	elif todo == "rotate":
+		# rotate XDFL file 
+		if len(sys.argv)>4:
+			theta = float(sys.argv[3])
+			fabTree=rotate(fabTree, theta)
+			writeTree(sys.argv[4], fabTree)	
+		else: print_error()
 
-    elif todo == "parity":
+	elif todo == "parity":
         # rotate XDFL file 
-        print "parity"
-        fabTree=parity(fabTree)
-        fabTree.write(sys.argv[2])
-    elif todo == "dimensions":
-        (minvalues,maxvalues) = dimensions(fabTree)
-        print minvalues,maxvalues
+		print "parity"
+		fabTree=parity(fabTree)
+		writeTree(sys.argv[3], fabTree)	
 
-    elif todo == "startpath":
-        number = float(sys.argv[3])
-        fabTree=startpath(fabTree,number)
-        fabTree.write(sys.argv[2])
+	elif todo == "dimensions":
+		(minvalues,maxvalues) = dimensions(fabTree)
+		print minvalues,maxvalues
+
+	elif todo == "startpath":
+		number = float(sys.argv[3])
+		fabTree=startpath(fabTree,number)
+		writeTree(sys.argv[4], fabTree)	
         
+	elif todo == "scale":
+        #translate fabfile x yz
+		if len(sys.argv)>6:
+			x = float(sys.argv[3])
+			y = float(sys.argv[4])
+			z = float(sys.argv[5])
+			fabTree=scale(fabTree, x, y, z)
+			writeTree(sys.argv[6], fabTree)	
+		else: print_error()
 
