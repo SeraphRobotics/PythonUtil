@@ -197,22 +197,44 @@ class FabFileVisualizer(QWidget,  Ui_LayerViewWidget):
         self.layerSpin.setRange(0, len(layers)-1)
         self.layerSlider.setRange(0, len(layers)-1)
 
-        maxX=0
-        maxY=0
-        minX=0
-        minY=0
+        maxX=-10000
+        maxY=-10000
+        maxZ=-10000
+        minX=10000
+        minY=10000
+        minZ=10000
+        
         for layer in layers:
             for path in layer:
                 for point in path.getPoints():
                     x = point.x()
                     y= point.y()
+                    z = point.z()
                     if x>maxX: maxX=x
                     if y>maxY: maxY=y
+                    if z>maxZ: maxZ=z
                     if x<minX: minX=x
-                    if y<minY: maxY=y
+                    if y<minY: minY=y
+                    if z<minZ: minZ=z
+
+        mins=[]
+        maxs=[]
+        if (SLICE_DIRECTION ==2): ## Z direction slice
+            mins=[minX, minY]
+            maxs=[maxX, maxY]
+        elif (SLICE_DIRECTION ==1): ## Y direction slice
+            mins=[minX, minZ]
+            maxs=[maxX, maxZ]           
+        elif(SLICE_DIRECTION == 0 ):
+            mins=[minY, -maxZ]
+            maxs=[maxY, -minZ]      
+
+
+        print mins
+        print maxs
         self.layerView.setSceneRect(
-                                            QRectF(QPointF(maxX, maxY),
-                                                    QPointF(minX, minY)))   
+                                            QRectF(QPointF(1.5*maxs[0], 1.5*maxs[1]),
+                                                    QPointF(1.5*mins[0], 1.5*mins[1])))   
         
         
 

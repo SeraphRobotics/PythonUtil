@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-4.6.dtd">
 <!-- eric4 project file for project FabFile Visualizer -->
-<!-- Saved: 2010-06-29, 04:49:47 -->
-<!-- Copyright (C) 2010 Jeffrey Lipton, jil26@cornell.edu -->
+<!-- Saved: 2012-09-06, 21:33:23 -->
+<!-- Copyright (C) 2012 Jeffrey Lipton, jil26@cornell.edu -->
 <Project version="4.6">
   <Language>en</Language>
   <ProgLanguage mixed="0">Python</ProgLanguage>
@@ -17,6 +17,7 @@
     <Source>ui_LayerViewerWidget.py</Source>
     <Source>FabFileLoader.py</Source>
     <Source>Point.py</Source>
+    <Source>CoatingAlgorithm.py</Source>
   </Sources>
   <Forms>
     <Form>ui_LayerViewerWidget.ui</Form>
