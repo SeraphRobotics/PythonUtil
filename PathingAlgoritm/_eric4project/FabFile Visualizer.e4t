@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Tasks SYSTEM "Tasks-4.2.dtd">
+<!-- eric4 tasks file for project FabFile Visualizer -->
+<!-- Saved: 2012-09-06, 21:39:28 -->
+<Tasks version="4.2">
+  <Task priority="1" completed="False" bugfix="False">
+    <Summary>TODO: Have the color of the line vary to indicate how far along it is</Summary>
+    <Description></Description>
+    <Created>2012-09-06, 15:16:40</Created>
+    <Resource>
+      <Filename>FabFileVisualizer.py</Filename>
+      <Linenumber>191</Linenumber>
+    </Resource>
+  </Task>
+</Tasks>

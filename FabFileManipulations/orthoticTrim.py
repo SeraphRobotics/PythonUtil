@@ -5,22 +5,20 @@ ZThreshold = 0.1
 vThresh1 = 100
 vThresh2 = 4
 DThreshold = 0.5
-HorizThreshold = .02
+HorizThreshold = .04
 
 axes=["x","y","z"]
 
 
-def elementToList(point)
+def elementToList(point):
     list = []
     for axis in axes:
-        list.append(float(point.find[axis].text))
+        list.append(float(point.find(axis).text))
     return list
 
 def slopeZY(point1, point2):
-
     p1 = elementToList(point1)
     p2 = elementToList(point2)
-
     dy = p1[1] - p2[1]
     dz = p1[2] - p2[2]
     s = 0
@@ -42,40 +40,97 @@ def findBottom(points):
     
     
     bottomlist = []
+    
+    firstpoint = 0
+    lastpoint = 0
     #Case for i=0
-    if ((minz+ZThreshold)>points[0]):bottomlist.append(0)
+    
+    if ((minz+ZThreshold)>elementToList(points[0])[2]): firstpoint = 1
+    if ((minz+ZThreshold)>elementToList(points[-1])[2]): lastpoint = 1
+#        bottomlist.append(0)
+    
 
     #i>0
     for i in range(1, len(points)):
-        point = points[i]
-        previouspoint = points[i-1]
-        s = abs(slopeZY(point, previouspoint))
-        print "slope:", s
-        if (s<HorizThreshold) and (point[2]<(minz+ZThreshold)):
+        point = elementToList(points[i])
+        s = abs(slopeZY(points[i], points[i-1]))
+        #print "slope:", s
+        if (s<HorizThreshold) and (point[2]<(minz+ZThreshold)): # 
             bottomlist.append(i)
-        previouspoint = point
-    return bottomlist
+    return bottomlist,  firstpoint,  lastpoint
  
  
 def trimSidesAndBottom(fabTree):
-    for path in fabTree.getiterator("path"):
-        points = path.findAll("point")
-        bottomIDs = findBottom(points)
+    firstpoint = 0
+    lastpoint = 0
+    sortDirection=1
+    paths = fabTree.findall("path")
+#    for path in fabTree.getiterator("path"):
+#    for i in range(21,22):
+    for i in range(0,len(paths)):
+        path = paths[i]
+        points = path.findall("point")
+        print "number of points:",  len(points)
+        bottomIDs,  firstpoint,  lastpoint = findBottom(points)
+        if (len(bottomIDs)==0):
+            print "Couldnt find bottom on path",  path
+            pass
+#        print "Bottom Points",  bottomIDs
+
         #expandBottomList
         fullBottomIDList=[]
         for id in bottomIDs:
             if(id!=0): fullBottomIDList.append(id-1)
             fullBottomIDList.append(id)
-        sideIDs = trimSides(points,fullBottomIDList)
-        for id in fullBottomIDList:
+
+
+        # finds the sides based on the bottom
+        sideIDs,  toDrop = trimSides(points,fullBottomIDList)
+        
+        toBeRemoved = fullBottomIDList + sideIDs
+        if firstpoint: toBeRemoved.append(0)
+        if lastpoint: toBeRemoved.append(len(points)-1)
+        
+        for j in range(0, len(toBeRemoved)):
+            if (toBeRemoved[j]<0): toBeRemoved[j]= len(points)+toBeRemoved[j]
+        toBeRemoved = sorted(list(set(toBeRemoved)))
+        
+        for id in toDrop:
+            if (toBeRemoved.count(id)): toBeRemoved.remove(id)
+        
+        
+        
+        print "Path %i, to be removed is "%i ,  toBeRemoved
+        
+        for id in toBeRemoved:
             path.remove(points[id])
-        for id in sideIDs:
-            path.remove(points[id])
+        
+        orderPath(path, sortDirection)
+        sortDirection= not sortDirection
+        
+    return fabTree
     
-    
+def orderPath(path, direction):#axis=2
+    #{y,point)
+    pointYdict={}
+    for point in path.getiterator("point"):
+        y = elementToList(point)[1]
+        pointYdict[y]=point
+        path.remove(point)
+    ys = pointYdict.keys()
+    if (direction>0):#asscending
+        ys = sorted(ys)
+    else: #decending
+        ys = sorted(ys, reverse=True)
+    for y in ys:
+        point = pointYdict[y]
+        path.append(point)
     
 
+
 def  trimSides(points,fullBottomIDList):
+    numpoints = len(points)
+    
     #findExtreme Ys
     maxy = -10000
     maxyID = -1
@@ -89,10 +144,11 @@ def  trimSides(points,fullBottomIDList):
         if (y>maxy):
             maxy = y
             maxyID= i
-    print "Max Y:%f, id:%i\nMinY:%f, id:%i"%(maxy, maxyID, miny, minyID)
+#    print "**** Max Y:%f, id:%i****\n****MinY:%f, id:%i ****"%(maxy, maxyID, miny, minyID)
     
     extremum = [[maxyID, maxy], [minyID, miny]]
     sideIDs = []
+    toDrop=[]
     for extreme in extremum:
         id = extreme[0]
         exy = extreme[1]
@@ -100,16 +156,18 @@ def  trimSides(points,fullBottomIDList):
         extremumSideIDs=[]
         idDirection=-1
         if (fullBottomIDList.count(id-1)):idDirection=1
+        print "Extremum [max=0, min=1]:", extremum.index(extreme)
+        print "\tFullButtom IDs",  fullBottomIDList
+        print "\tDoes it contain:%i, -1"%id
+        
         
         counter = 0
-        countThreshold=100000
         i = id
         metVThres1=0
         metVThres2=0
         bottompoint = points[id]
-        while (counter<countThreshold):
+        while ((counter<numpoints) and not metVThres2):
             counter = counter+1
-            print i, len(points)
             if (i>=len(points)-1) and (idDirection>0):
                 ## reset id to loop around
                 i = 0
@@ -120,18 +178,45 @@ def  trimSides(points,fullBottomIDList):
             
             slopeToBottom = abs(slopeZY(bottompoint, currentpoint))
             slopeBetweenPoints = abs(slopeZY(currentpoint, lastpoint))
+#            print "%i"%i
+#            print "\t Direction %i"%idDirection
+#            print "\t slope to:",   slopeToBottom
+#            print "\t slope between:",  slopeBetweenPoints
+#            print "\t Current:",  elementToList(currentpoint)
+#            print"\t LastPoint:",  elementToList(lastpoint)
+#            print"\t BottomPoint",  elementToList(bottompoint)
             
             if not metVThres1:
                 extremumSideIDs.append(i)
                 if(slopeToBottom>vThresh1):
                     metVThres1 = 1
+                    print "met thresh 1"
             elif not metVThres2:
                 if(slopeBetweenPoints>vThresh2):
                     extremumSideIDs.append(i)
                 else:
                     metVThres2 = 1
-                    print "Slope between points ", slopeBetweenPoints
-                    break
-        extremumSideIDs.pop()
+                    print "Met Thres 2, Slope between points ", slopeBetweenPoints
+        ##extremumSideIDs.pop()
         sideIDs.extend(extremumSideIDs)
-    return sideIDs
+        toDrop.append(extremumSideIDs[-1])
+        
+    return sideIDs, toDrop
+    
+    
+if __name__ == '__main__':
+    import sys
+    todo = sys.argv[1]
+    
+    if todo== "help":
+        print "\northoticTrim.py 'file name old' 'file name 2' "
+    elif len(sys.argv)< 2:
+        print "need more arguments. type help"
+    
+    else: 
+        fabTree = ElementTree(file = sys.argv[1])
+        fabTree = trimSidesAndBottom(fabTree)
+        print "starting"
+        fabTree.write(sys.argv[2])
+        print "done"
+    

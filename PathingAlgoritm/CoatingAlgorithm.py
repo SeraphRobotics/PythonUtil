@@ -43,7 +43,7 @@ def findBottom(Path):
         point = points[i]
         previouspoint = points[i-1]
         s = abs(slopeZY(point, previouspoint))
-        print "slope:", s
+        #print "slope on the bottom:", s
         if (s<HorizThreshold) and (point.z()<(minz+ZThreshold)):
             bottomlist.append(i)
         previouspoint = point
@@ -79,14 +79,17 @@ def bottomCheck(path,scene, direction=2):
         color.setAlphaF(.5)
         #Mark the bottom line segments
         graphPoints(scene, color, points, bottomIDs, direction)
-            
+        
+        toBeRemoved=[]
         #expandBottomList
         fullBottomIDList=[]
         for id in bottomIDs:
             if(id!=0): fullBottomIDList.append(id-1)
             fullBottomIDList.append(id)
             
-            
+        lowbottoms = list(set(fullBottomIDList))
+#        print "Bottoms:", lowbottoms  
+        toBeRemoved = lowbottoms
         #findExtreme Ys
         maxy = -10000
         maxyID = -1
@@ -100,7 +103,7 @@ def bottomCheck(path,scene, direction=2):
             if (y>maxy):
                 maxy = y
                 maxyID= i
-        print "Max Y:%f, id:%i\nMinY:%f, id:%i"%(maxy, maxyID, miny, minyID)
+#        print "Max Y:%f, id:%i\nMinY:%f, id:%i"%(maxy, maxyID, miny, minyID)
         
         extremum = [[maxyID, maxy], [minyID, miny]]
         for extreme in extremum:
@@ -110,6 +113,9 @@ def bottomCheck(path,scene, direction=2):
             extremumSideIDs=[]
             idDirection=-1
             if (fullBottomIDList.count(id-1)):idDirection=1
+            print "Extremum [max=0, min=1]:", extremum.index(extreme)
+            print "\tFullButtom IDs",  fullBottomIDList
+            print "\tDoes it contain:%i, -1"%id
             
             counter = 0
             countThreshold=100000
@@ -119,7 +125,6 @@ def bottomCheck(path,scene, direction=2):
             bottompoint = points[id]
             while (counter<countThreshold):
                 counter = counter+1
-                print i, len(points)
                 if (i>=len(points)-1) and (idDirection>0):
                     ## reset id to loop around
                     i = 0
@@ -131,6 +136,14 @@ def bottomCheck(path,scene, direction=2):
                 slopeToBottom = abs(slopeZY(bottompoint, currentpoint))
                 slopeBetweenPoints = abs(slopeZY(currentpoint, lastpoint))
                 
+#                print "%i"%i 
+#                print "\t Direction %i"%idDirection
+#                print "\t slope to bottom",  slopeToBottom
+#                print "\t slope between points",  slopeBetweenPoints
+#                print "\t Current: [%F,%F,%F]"%(currentpoint.x(),currentpoint.y(), currentpoint.z())
+#                print "\t LastPoint: [%F,%F,%F]"%(lastpoint.x(), lastpoint.y(), lastpoint.z())
+#                print "\t BottomPoint [%F,%F,%F]"%(bottompoint.x(),  bottompoint.y(), bottompoint.z())
+                
                 if not metVThres1:
                     extremumSideIDs.append(i)
                     if(slopeToBottom>vThresh1):
@@ -140,9 +153,10 @@ def bottomCheck(path,scene, direction=2):
                         extremumSideIDs.append(i)
                     else:
                         metVThres2 = 1
-                        print "Slope between points ", slopeBetweenPoints
                         break
             
             color = QColor(Qt.green)
             color.setAlphaF(0.5)
             graphPoints(scene, color, points,extremumSideIDs, direction,  idDirection)
+            toBeRemoved.extend(list(set(extremumSideIDs)))
+        print "Path will remove ",  sorted(toBeRemoved)
