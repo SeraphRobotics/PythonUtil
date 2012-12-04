@@ -2,6 +2,7 @@
 from xml.etree.ElementTree import ElementTree, Element 
 from math import cos, sin, pi
 
+##########################GLOBAL MANIPULATIONS ####################################
 def sortIntoLayers(fabTree):
     slices={}
     root = fabTree.getroot()
@@ -57,7 +58,20 @@ def startpath(fabTree, number):
             cmd.remove(path)
     return fabTree
     
-    
+def dropClearance(fabTree):
+    root = fabTree.getroot()
+    cmd = root.find("commands")
+    i = 0;
+    for path in fabTree.getiterator("path"):
+        matid=0
+        matidel = path.find("materialID")
+        if (type(None) == type(matidel)): 
+            matidel = path.find("materialid")
+        if (type(None) != type(matidel)): 
+            matid = int(matidel.text)
+        if (matid==0):
+            cmd.remove(path)
+    return fabTree    
     
     
     
@@ -67,12 +81,17 @@ def forEachPoint(fabTree, argFunction, arguments, targetMatId=-1):
     axes = ["x", "y", "z"]
     "This will translate a fabFile element tree and return the tree"
     for path in fabTree.getiterator("path"):
-        matid=-1
+        matid=0
         matidel = path.find("materialID")
+        if (type(None) == type(matidel)): 
+            matidel = path.find("materialid")
         if (type(None) != type(matidel)): 
             matid = int(matidel.text)
         
-        if ((targetMatId!=-1) and (matid== targetMatId)):
+        print "ID is %i, target is%i"%(matid,targetMatId)
+        
+        if ((targetMatId==-1) or (matid== targetMatId)):
+            print "doing"
             for point in path.findall("point"):
                 elements = []
                 for i in range(0,3):elements.append(Element(axes[i]))
@@ -85,7 +104,7 @@ def forEachPoint(fabTree, argFunction, arguments, targetMatId=-1):
                         elements[i] = el
                         val = float(el.text)
                         values[i]=val
-                newvalues = argFunction(matid,values,arguments)
+                newvalues = argFunction(values,arguments)
                 for i in range(0,3):
                     elements[i].text = "%f"%newvalues[i]
     return fabTree
@@ -149,7 +168,10 @@ if __name__ == '__main__':
             x = float(sys.argv[3])
             y = float(sys.argv[4])
             z = float(sys.argv[5])
-            fabTree=translate(fabTree, x, y, z)
+            id=-1
+            if len(sys.argv)>6:
+                id = int(sys.argv[6])
+            fabTree=translate(fabTree, x, y, z, id)
             fabTree.write(sys.argv[2])
         else:
             print "Incorrect number of arguments"
@@ -181,4 +203,7 @@ if __name__ == '__main__':
         fabTree=startpath(fabTree,number)
         fabTree.write(sys.argv[2])
         
+    elif todo == "dropclearance":
+        fabTree=dropClearance(fabTree)
+        fabTree.write(sys.argv[2])    
 

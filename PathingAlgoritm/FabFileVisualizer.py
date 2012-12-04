@@ -53,14 +53,14 @@ class FabFileVisualizer(QWidget,  Ui_LayerViewWidget):
     to change layers, hit up arrow to change layer + , down arrow to change layer -
     
     """
-    def __init__(self, fabFile=None):
+    def __init__(self, fabFile=None,  coatingBool=0):
         super(FabFileVisualizer, self).__init__()
         self.setupUi(self)
         self.fabFile=fabFile
         self.setLayers([])
         self.showWidth=False
         self.clearBetweenLayers = True
-        
+        self.coatingBool=coatingBool
         
         #Set up GUI
 
@@ -189,7 +189,7 @@ class FabFileVisualizer(QWidget,  Ui_LayerViewWidget):
                 for line in pathToLineStack(path,  SLICE_DIRECTION): ## SLICE_DIRECTION
                     scene.addLine(line, self.pen)
                     #TODO: Have the color of the line vary to indicate how far along it is
-                bottomCheck(path, scene, SLICE_DIRECTION)
+                if (self.coatingBool): bottomCheck(path, scene, SLICE_DIRECTION)
                 
     def setLayers(self, layers):
         """set the layers list which contains the layer list which contians the path instances"""
@@ -282,7 +282,8 @@ def sortPathsIntoLayers(pathstack, direction=2):
 if __name__ == "__main__":
     import sys
     app = QApplication(sys.argv)
-    if len(sys.argv)>=2: form = FabFileVisualizer(sys.argv[1])
+    if len(sys.argv)>=3: form = FabFileVisualizer(sys.argv[1], int(sys.argv[2]))
+    elif len(sys.argv)>=2: form = FabFileVisualizer(sys.argv[1])
     else: form=FabFileVisualizer()
     form.show()
     

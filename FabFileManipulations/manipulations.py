@@ -32,6 +32,7 @@ This file is part of the Fab@Home Project.
 
 from xml.etree.ElementTree import ElementTree 
 import math
+from orthoticTrim import *
 
 def merge(fabTree, fabTree2):
     root = fabTree.getroot()
@@ -178,11 +179,18 @@ if __name__ == '__main__':
     elif todo=="orthotic":
         angle = float(sys.argv[3])
         translateZ = float(sys.argv[4])
-        thresholdZ = float(sys.argv[5])
+        pathWidth = float(sys.argv[5])
+#        thresholdZ = float(sys.argv[5])
         fabTree = rotateY(fabTree,angle)
         fabTree = translate(fabTree,0,0,translateZ)
-        fabTree = thresholdPoints(fabTree,thresholdZ)
-        fabTree.write(sys.argv[2])
+        fabTree = trimSidesAndBottom(fabTree)
+        
+        fabTree = solveHolesInLayers(fabTree,pathWidth,  0)
+#        fabTree = thresholdPoints(fabTree,thresholdZ)
+        if (len(sys.argv)>6):
+            fabTree.write(sys.argv[6])
+        else:
+            fabTree.write(sys.argv[2])
         
 
 

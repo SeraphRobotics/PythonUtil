@@ -30,7 +30,7 @@ This file is part of the Fab@Home Project.
  '''
 
 
-from xml.etree.ElementTree import ElementTree 
+from xml.etree.ElementTree import ElementTree, Element
 import xml.etree.ElementTree as etree
 from math import cos, sin, pi
 
@@ -140,6 +140,21 @@ def dimensions(fabTree, mid=None):
             
     return (minvalues,maxvalues)
     
+
+def xdfl2fab(fabTree):
+
+	newroot = Element("fabAtHomePrinter")
+	newTree = ElementTree(newroot)
+	pathaccel = Element("printAcceleration")
+	newroot.append(pathaccel)
+	pathaccel.text = "100"
+	matcal = Element("materialCalibration")
+	newroot.append(matcal)
+	for path in fabTree.getiterator("path"):
+		if not(len(path.findall("speed"))):
+			newroot.append(path)
+	return newTree
+	
     
 def startpath(fabTree, number):
     root = fabTree.getroot()
@@ -177,6 +192,7 @@ if __name__ == '__main__':
 		print "\nparity - manipulations.py parity 'file name' 'write name'"
 		print "\nstartpath - manipulations.py  startpath 'file name' index 'write name' "
 		print "\nscale - manipulations.py scale 'filename' x y z 'write name' "
+		print "\ntoFab - manipulations.py toFab 'filename' 'write name' "
 		
 	else:
 		fabTree = ElementTree(file = sys.argv[2])
@@ -230,4 +246,7 @@ if __name__ == '__main__':
 			fabTree=scale(fabTree, x, y, z)
 			writeTree(sys.argv[6], fabTree)	
 		else: print_error()
-
+		
+	elif todo == "toFab":
+		fabTree=xdfl2fab(fabTree)
+		writeTree(sys.argv[3], fabTree)	

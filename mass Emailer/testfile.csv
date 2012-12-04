@@ -1,0 +1,6 @@
+SALUTATION,FIRSTNAME,LASTNAME,SUFFIX,TITLE,FULL_COMPANYNAME,SHORT-COMPANY_NAME,ADDRESS1,ADDRESS2,ADDRESS3,CITY,STATE,ZIP,EMAIL,Category,Telephone,Status,Lead,Fax,Website,Multiple_VC
+Mr. ,Adam,Tow,MBA,CEO,"Seraph Robotics, Inc. ",Seraph,526 Campus Rd,Suite 409C,,Ithaca,NY,14853,adam@seraphrobotics.com,GUST,9417355100,Send,None,,seraphrobtoics.com,Y
+Dr. ,Perry,Tow,MBA,COO,Cornell University,Cornell,100 Fairview Sq,5H,,Ithaca,NY,14850,apt38@cornell.edu,Cornell,9417355100,Send,Cornell,,cornell.edu,N
+Mr. ,Jeffrey,Lipton,MS,CTO,"Seraph Robotics, Inc. ",Seraph,526 Campus Rd,Suite 409C,,Ithaca,NY,14853,jeff@seraphrobotics.com,GUST,,Send,Cornell,,seraphrobtoics.com,Y
+Mr. ,Lou,Walcer,MBA,,McGovern Center,McGovern,526 Campus rd,,,Ithaca,,14853,lou.walcer@cornell.edu,Lou - C,,Send,Lou,,mcgoverncenter.com,N
+Dr. ,Fred,Tow,MD,,Palm Beach Associates,Palm Beach,,,,,FL,33433,fredtow@gmail.com,GUSt,,Send,None,,palmbeach.com,N

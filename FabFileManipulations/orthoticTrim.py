@@ -1,4 +1,4 @@
-from xml.etree.ElementTree import ElementTree 
+from xml.etree.ElementTree import ElementTree,  Element
 import math
 
 ZThreshold = 0.1
@@ -204,6 +204,67 @@ def  trimSides(points,fullBottomIDList):
     return sideIDs, toDrop
     
     
+
+def solveHolesInLayers(fabTree, PathWidth, direction=2):
+    """turns a list of paths into a list of of a list of paths with the same Z value"""
+    slices={}
+    root = fabTree.getroot()
+    for path in fabTree.getiterator("path"):
+        slicekey = 0 
+        if (direction ==2): 
+            slicekey = float(path.find("point").find("z").text)
+        elif (direction ==1): 
+            slicekey = float(path.find("point").find("y").text)
+        elif (direction ==0): 
+            slicekey = float(path.find("point").find("x").text)
+            
+        if slicekey in slices.keys(): slices[slicekey].append(path)
+        else: slices[slicekey]=[path]
+        root.remove(path)
+
+    slicekeys =  sorted(slices.keys())
+    for i in range(0, len(slicekeys)-1):
+        current = slicekeys[i]
+        next = slicekeys[i+1]
+        delta = abs(next-current)
+        for path in slices[current]:
+            root.append(path)
+        if (delta >2.0*PathWidth):
+            numPaths = int(delta/PathWidth)-1
+            for j in range(0, numPaths):
+                toTranslate = (j+1)*PathWidth
+                newPath = translatedPath(path, toTranslate, direction)
+                root.append(newPath)
+                print "ADDED NEW PATH"
+    
+    return fabTree
+
+def translatedPath(path, toTranslate, direction = 2):
+    axis = axes[direction]
+    delta = [0, 0, 0]
+    delta[direction] = toTranslate
+    print "Delta ",  delta
+    newpath = Element("path")
+    matcalEl = path.find("materialCalibrationName")
+    newpath.append(matcalEl)
+    for point in path.getiterator("point"):
+        p = Element("point")
+        for axis in axes:
+            value = float(point.find(axis).text)
+            el = Element(axis)
+            newval = value+delta[axes.index(axis)]
+            el.text = "%f"%(newval)
+            print "Shifted %s from %f to %f"%(axis, value, newval)
+            p.append(el)
+        newpath.append(p)
+    
+    return newpath
+    
+
+
+
+
+
 if __name__ == '__main__':
     import sys
     todo = sys.argv[1]
