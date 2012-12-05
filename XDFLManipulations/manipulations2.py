@@ -3,18 +3,40 @@ from xml.etree.ElementTree import ElementTree, Element
 from math import cos, sin, pi
 
 ##########################GLOBAL MANIPULATIONS ####################################
+def indent(elem, level=0):
+	
+	# Helper function that fixes the indentation scheme of a given Element object
+	# and all of its subelements
+	#
+	# Modified from: http://infix.se/2007/02/06/gentlemen-indent-your-xml
+
+    i = "\n" + level*"  "
+    if len(elem):
+        if not elem.text or not elem.text.strip():
+            elem.text = i + "  "
+        for e in elem:
+            indent(e, level+1)
+            if not e.tail or not e.tail.strip():
+                e.tail = i + "  "
+        if not e.tail or not e.tail.strip():
+            e.tail = i
+    else:
+        if level and (not elem.tail or not elem.tail.strip()):
+            elem.tail = i
+
 def sortIntoLayers(fabTree):
     slices={}
     root = fabTree.getroot()
-    for path in fabTree.getiterator("path"):
+    cmd = root.find("commands")
+    for path in cmd.getiterator("path"):
         z = float(path.find("point").find("z").text)
         if z in slices.keys(): slices[z].append(path)
         else: slices[z]=[path]
-        root.remove(path)
+        cmd.remove(path)
 
     for z in sorted(slices.keys()):
         for path in slices[z]:
-            root.append(path)
+            cmd.append(path)
     return fabTree
 
 def threshold(fabTree, threshold=0):
@@ -73,7 +95,96 @@ def dropClearance(fabTree):
             cmd.remove(path)
     return fabTree    
     
+def setClearance(fabTree, clearance, speed= 10):
+        ### ONLY WORKS FOR PATH ONLY COMMANDS! Will drop Dwell or Voxel tags
+        # remove old clearances
+        fabTree = dropClearance(fabTree)
+        
+        
+        root = fabTree.getroot()
+        oldcmd = root.find("commands")
+        newcmd = Element("commands")
+        
+        firstpath=True
+        lastpoint=[0,0,0]
+        for path in oldcmd.getiterator("path"):
+            ##Turn path into points list
+            pathpoints = pointsListFromPathEl(path)
+            
+            if firstpath:
+                # if first path, do nothing
+                firstpath = False;
+            else:
+                ##Get Last Point from last path
+                #lastpoint
+                ##Get first point from this path
+                firstpoint = pathpoints[0]
+                ##make clearance path between
+                pointA = [lastpoint[0],lastpoint[1],lastpoint[2]+clearance]
+                pointB = [firstpoint[0],firstpoint[1],firstpoint[2]+clearance]
+                pointslist=[lastpoint,pointA,pointB,firstpoint]
+                transitionpath = pathFromPointsList(pointslist,0,speed)
+                newcmd.append(transitionpath)
+            
+            ## add path to new commands and set last point
+            newcmd.append(path)
+            lastpoint = pathpoints[-1]
+        root.remove(oldcmd)
+        root.append(newcmd)
+        return fabTree
+        
+
+                
+                
+def pointsListFromPathEl(pathEl):
+    pointsList=[]
+    for pointEl in pathEl.getiterator("point"):
+        pList = pointListFromPointEl(pointEl)
+        pointsList.append(pList)
+    return pointsList
+
+def pointListFromPointEl(pointEl):
+    axes = ["x", "y", "z"]
+    indecies = [0,1,2]
+    pList=[0,0,0]
+    for index in indecies:
+        el = pointEl.find(axes[index])
+        val = float(el.text)
+        pList[index]=val
+    return pList
     
+    
+        
+def pathFromPointsList(pointsList, id=0, speed=10):
+    p = Element("path")
+    
+    ## if id is given, make it a materialID path, else add a speed tag
+    if(id>0):
+        matIdEl = Element("materialid")
+        matIdEl.text = "%i"%id
+        p.append(matIdEl)
+    else:
+        speedEl = Element("speed")
+        speedEl.text="%f"%speed
+        p.append(speedEl)
+    
+    ###Add Points of the form [[x1,y1,z1],[x2,y2,z2],...]
+    for pointList in pointsList:
+        pointEl = pointFromList(pointList)
+        p.append(pointEl)
+    return p
+        
+
+def pointFromList(pointAsList):
+    ### Take a point [x,y,z] to XDFL format
+    axes = ["x", "y", "z"]
+    indecies = [0,1,2]
+    p = Element("point")
+    for index in indecies:
+        el = Element(axes[index])
+        el.text = "%f"%pointAsList[index]
+        p.append(el)
+    return p
     
     
 ##################MANIPULATIONS ON EACH POINT (OR MATERIAL'S POINTS)###############################
@@ -207,3 +318,10 @@ if __name__ == '__main__':
         fabTree=dropClearance(fabTree)
         fabTree.write(sys.argv[2])    
 
+    elif todo == "setclearance":
+        clearance = float(sys.argv[3])
+        speed = 10
+        if len(sys.argv)>3: speed = float(sys.argv[4])
+        fabTree=setClearance(fabTree,clearance,speed)
+        indent(fabTree.getroot())
+        fabTree.write(sys.argv[2])  

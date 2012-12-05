@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<items xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<item>
+		<name>Mcgovern Center Fax</name>
+		<fax>(607) 254-4244 fax</fax>
+        <phone>(201) 224-0255 phone</phone>
+		<state>Fort Lee, NJ</state>
+		<location>810 Abbott Blvd.</location>
+		<education>Ohio College of Podiatric Medicine 1980</education>
+		<zip_code>07024-4116</zip_code>
+
+	</item>
+    <item>
+		<name>Mcgovern Staff Private Fax</name>
+		<fax>(607) 255-3338 fax</fax>
+        <phone>(201) 224-0255 phone</phone>
+		<state>Fort Lee, NJ</state>
+		<location>810 Abbott Blvd.</location>
+		<education>Ohio College of Podiatric Medicine 1980</education>
+		<zip_code>07023</zip_code>
+	</item>
+</items>
