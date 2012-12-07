@@ -2,14 +2,14 @@
 from xml.etree.ElementTree import ElementTree, Element 
 from math import cos, sin, pi
 
-########################Helper Functions###########################################
-
-
+##########################GLOBAL MANIPULATIONS ####################################
 def indent(elem, level=0):
+	
 	# Helper function that fixes the indentation scheme of a given Element object
 	# and all of its subelements
 	#
 	# Modified from: http://infix.se/2007/02/06/gentlemen-indent-your-xml
+
     i = "\n" + level*"  "
     if len(elem):
         if not elem.text or not elem.text.strip():
@@ -23,64 +23,7 @@ def indent(elem, level=0):
     else:
         if level and (not elem.tail or not elem.tail.strip()):
             elem.tail = i
-            
 
-############# Elements to Lists ##################  
-def pointsListFromPathEl(pathEl):
-    pointsList=[]
-    for pointEl in pathEl.getiterator("point"):
-        pList = pointListFromPointEl(pointEl)
-        pointsList.append(pList)
-    return pointsList
-
-def pointListFromPointEl(pointEl):
-    axes = ["x", "y", "z"]
-    indecies = [0,1,2]
-    pList=[0,0,0]
-    for index in indecies:
-        el = pointEl.find(axes[index])
-        val = float(el.text)
-        pList[index]=val
-    return pList
-    
-    
-
-############# Lists to elements ##################
-def pathFromPointsList(pointsList, id=0, speed=10):
-    p = Element("path")
-    
-    ## if id is given, make it a materialID path, else add a speed tag
-    if(id>0):
-        matIdEl = Element("materialid")
-        matIdEl.text = "%i"%id
-        p.append(matIdEl)
-    else:
-        speedEl = Element("speed")
-        speedEl.text="%f"%speed
-        p.append(speedEl)
-    
-    ###Add Points of the form [[x1,y1,z1],[x2,y2,z2],...]
-    for pointList in pointsList:
-        pointEl = pointFromList(pointList)
-        p.append(pointEl)
-    return p
-        
-
-def pointFromList(pointAsList):
-    ### Take a point [x,y,z] to XDFL format
-    axes = ["x", "y", "z"]
-    indecies = [0,1,2]
-    p = Element("point")
-    for index in indecies:
-        el = Element(axes[index])
-        el.text = "%f"%pointAsList[index]
-        p.append(el)
-    return p
-
-
-            
-
-##########################GLOBAL MANIPULATIONS ####################################
 def sortIntoLayers(fabTree):
     slices={}
     root = fabTree.getroot()
@@ -191,6 +134,58 @@ def setClearance(fabTree, clearance, speed= 10):
         return fabTree
         
 
+                
+                
+def pointsListFromPathEl(pathEl):
+    pointsList=[]
+    for pointEl in pathEl.getiterator("point"):
+        pList = pointListFromPointEl(pointEl)
+        pointsList.append(pList)
+    return pointsList
+
+def pointListFromPointEl(pointEl):
+    axes = ["x", "y", "z"]
+    indecies = [0,1,2]
+    pList=[0,0,0]
+    for index in indecies:
+        el = pointEl.find(axes[index])
+        val = float(el.text)
+        pList[index]=val
+    return pList
+    
+    
+        
+def pathFromPointsList(pointsList, id=0, speed=10):
+    p = Element("path")
+    
+    ## if id is given, make it a materialID path, else add a speed tag
+    if(id>0):
+        matIdEl = Element("materialid")
+        matIdEl.text = "%i"%id
+        p.append(matIdEl)
+    else:
+        speedEl = Element("speed")
+        speedEl.text="%f"%speed
+        p.append(speedEl)
+    
+    ###Add Points of the form [[x1,y1,z1],[x2,y2,z2],...]
+    for pointList in pointsList:
+        pointEl = pointFromList(pointList)
+        p.append(pointEl)
+    return p
+        
+
+def pointFromList(pointAsList):
+    ### Take a point [x,y,z] to XDFL format
+    axes = ["x", "y", "z"]
+    indecies = [0,1,2]
+    p = Element("point")
+    for index in indecies:
+        el = Element(axes[index])
+        el.text = "%f"%pointAsList[index]
+        p.append(el)
+    return p
+    
     
 ##################MANIPULATIONS ON EACH POINT (OR MATERIAL'S POINTS)###############################
 def forEachPoint(fabTree, argFunction, arguments, targetMatId=-1):
