@@ -80,9 +80,6 @@ def dimensions(fabTree, name=None):
     maxvalues = [0, 0,0]
     "This will translate a fabFile element tree and return the tree"
     for path in fabTree.getiterator("path"):
-        ## matidel = path.find("materialID")
-        ##if (type(None) == type(matidel)):break
-        ##if (name and matidel.text !=name):break
         for point in path.findall("point"):
             for i in range(0, 3):
                 el = point.find(axes[i])
@@ -215,7 +212,7 @@ def scale(fabtree, dx=0, dy=0, dz=0, mid=-1):
         return newvalues     
 
     values = [dx, dy, dz]
-    return forEachPoint(fabTree, scaler, values, id) 
+    return forEachPoint(fabTree, scaler, values, mid) 
     
 def translate(fabTree, dx=0, dy=0, dz=0,id=-1):
     "This will translate a element tree and return the tree"
@@ -270,14 +267,8 @@ if __name__ == '__main__':
         else:
             if level and (not elem.tail or not elem.tail.strip()):
                 elem.tail = i
-    
-    def print_error():
-        print "Incorrect number of arguments, try help"
-        print todo
-        print sys.argv
 
     def writeTree(output_file, tree):
-
         f = open(output_file, 'w')
         f.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?> \n")
         indent(tree.getroot())
@@ -285,92 +276,94 @@ if __name__ == '__main__':
         f.write(string)
         f.close()
     
+    def print_error():
+        print "Incorrect number of arguments, try help"
+        print todo
+        print sys.argv
     
     if todo== "help":
-        print "\ntheshold  - manipulations.py threshold 'file name' ('write name')"
-        print "\ntranslate - manipulations.py traslate 'file name' x y z "
-        print "\nrotate - manipulations.py rotate 'file name' theta ('write name')"
-        print "\nparity - manipulations.py parity 'file name' ('write name')"
-        print "\nstartpath - manipulations.py  startpath 'file name' index ('write name')"
-        print "\ndimensions- manipulations.py  dimensions 'file name' "
-        print "\ndrop clearance - manipulations.py dropclearance 'filename' ('write name')"
-        print "\nset clearance - manipulations.py setclearance 'filename' clearance (speed)"
-        print "\nscale - manipulations.py scale 'filename' x y z ('write name')"
-        print "\ntoFab - manipulations.py toFab 'filename' ('write name')"
-        return 0
-    
+        print " theshold\tmanipulations.py threshold 'file name' ('write name')"
+        print " translate\tmanipulations.py translate 'file name' x y z (id)"
+        print " rotate  \tmanipulations.py rotate 'file name' theta ('write name')"
+        print " parity  \tmanipulations.py parity 'file name' ('write name')"
+        print " startpath\tmanipulations.py startpath 'file name' index ('write name')"
+        print " dimensions\tmanipulations.py dimensions 'file name' "
+        print " drop clearance\tmanipulations.py dropclearance 'filename' ('write name')"
+        print " set clearance\tmanipulations.py setclearance 'filename' clearance (speed)"
+        print " scale  \tmanipulations.py scale 'filename' x y z ('write name')"
+        print " toFab  \tmanipulations.py toFab 'filename' ('write name')"
+        
     else: 
         fabTree = ElementTree(file = sys.argv[2])
         for el in fabTree.iter(): el.tag = el.tag.lower()
     
-    if todo == "threshold":
-        #threshold fabFile NewFab
-        fabTree = threshold(fabTree)
-        if len(sys.argv)>3:fabTree.write(sys.argv[3])
-        else:fabTree.write(sys.argv[2])
+        if todo == "threshold":
+            #threshold fabFile NewFab
+            fabTree = threshold(fabTree)
+            if len(sys.argv)>3:writeTree(sys.argv[3], fabTree)
+            else:writeTree(sys.argv[2],fabTree)
+            
+        elif todo == "translate":
+            #translate fabfile x yz
+            if len(sys.argv)>5:
+                x = float(sys.argv[3])
+                y = float(sys.argv[4])
+                z = float(sys.argv[5])
+                id=-1
+                if len(sys.argv)>6:
+                    id = int(sys.argv[6])
+                fabTree=translate(fabTree, x, y, z, id)
+                writeTree(sys.argv[2], fabTree)    
+            else: print_error()
         
-    elif todo == "translate":
-        #translate fabfile x yz
-        if len(sys.argv)>5:
-            x = float(sys.argv[3])
-            y = float(sys.argv[4])
-            z = float(sys.argv[5])
-            id=-1
+        elif todo == "rotate":
+            # rotate XDFL file 
+            if len(sys.argv)>2:
+                theta = float(sys.argv[3])
+                fabTree=rotate(fabTree, theta)
+                if len(sys.argv)>3: writeTree(sys.argv[4], fabTree)
+                else: writeTree(sys.argv[2], fabTree)                
+            else: print_error()
+
+        elif todo == "parity":
+            # rotate XDFL file 
+            print "parity"
+            fabTree=parity(fabTree)
+            if len(sys.argv)>2: writeTree(sys.argv[3],fabTree)
+            else: writeTree(sys.argv[2],fabTree)
+            
+        elif todo == "dimensions":
+            (minvalues,maxvalues) = dimensions(fabTree)
+            print minvalues,maxvalues
+
+        elif todo == "startpath":
+            number = float(sys.argv[3])
+            fabTree=startpath(fabTree,number)
+            if len(sys.argv)>3: writeTree(sys.argv[4],fabTree)
+            else: writeTree(sys.argv[2],fabTree)
+            
+        elif todo == "dropclearance":
+            fabTree=dropClearance(fabTree)
+            if len(sys.argv)>2: writeTree(sys.argv[3],fabTree)
+            else: writeTree(sys.argv[2],fabTree)
+            
+        elif todo == "setclearance":
+            clearance = float(sys.argv[3])
+            speed = 10
+            if len(sys.argv)>3: speed = float(sys.argv[4])
+            fabTree=setClearance(fabTree,clearance,speed)
+            writeTree(sys.argv[2],fabTree)
+            
+        elif todo == "scale":
+            #translate fabfile x yz
             if len(sys.argv)>6:
-                id = int(sys.argv[6])
-            fabTree=translate(fabTree, x, y, z, id)
-            writeTree(sys.argv[2], fabTree)    
-            fabTree.write(sys.argv[2])
-        else: print_error()
-    
-    elif todo == "rotate":
-        # rotate XDFL file 
-        if len(sys.argv)>2:
-            theta = float(sys.argv[3])
-            fabTree=rotate(fabTree, theta)
-            if len(sys.argv)>3: writeTree(sys.argv[4], fabTree)
-            else: writeTree(sys.argv[2], fabTree)                
-        else: print_error()
-
-    elif todo == "parity":
-        # rotate XDFL file 
-        print "parity"
-        fabTree=parity(fabTree)
-        if len(sys.argv)>2: writeTree(sys.argv[3],fabTree)
-        else: writeTree(sys.argv[2],fabTree)
-        
-    elif todo == "dimensions":
-        (minvalues,maxvalues) = dimensions(fabTree)
-        print minvalues,maxvalues
-
-    elif todo == "startpath":
-        number = float(sys.argv[3])
-        fabTree=startpath(fabTree,number)
-        if len(sys.argv)>3: writeTree(sys.argv[4],fabTree)
-        else: writeTree(sys.argv[2],fabTree)
-        
-    elif todo == "dropclearance":
-        fabTree=dropClearance(fabTree)
-        if len(sys.argv)>2: writeTree(sys.argv[3],fabTree)
-        else: writeTree(sys.argv[2],fabTree)
-        
-    elif todo == "setclearance":
-        clearance = float(sys.argv[3])
-        speed = 10
-        if len(sys.argv)>3: speed = float(sys.argv[4])
-        fabTree=setClearance(fabTree,clearance,speed)
-        writeTree(sys.argv[2],fabTree)
-        
-    elif todo == "scale":
-        #translate fabfile x yz
-        if len(sys.argv)>6:
-            x = float(sys.argv[3])
-            y = float(sys.argv[4])
-            z = float(sys.argv[5])
-            fabTree=scale(fabTree, x, y, z)
-            writeTree(sys.argv[6], fabTree)    
-        else: print_error()
-        
-    elif todo == "toFab":
-        fabTree=xdfl2fab(fabTree)
-        writeTree(sys.argv[3], fabTree)    
+                x = float(sys.argv[3])
+                y = float(sys.argv[4])
+                z = float(sys.argv[5])
+                fabTree=scale(fabTree, x, y, z)
+                writeTree(sys.argv[6], fabTree)    
+            else: print_error()
+            
+        elif todo == "toFab":
+            fabTree=xdfl2fab(fabTree)
+            writeTree(sys.argv[3], fabTree)    
