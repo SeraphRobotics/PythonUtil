@@ -4,27 +4,6 @@ import xml.etree.ElementTree as etree
 from math import cos, sin, pi
 
 ########################Helper Functions###########################################
-
-def indent(elem, level=0):
-    # Helper function that fixes the indentation scheme of a given Element object
-    # and all of its subelements
-    #
-    # Modified from: http://infix.se/2007/02/06/gentlemen-indent-your-xml
-    i = "\n" + level*"  "
-    if len(elem):
-        if not elem.text or not elem.text.strip():
-            elem.text = i + "  "
-        for e in elem:
-            indent(e, level+1)
-            if not e.tail or not e.tail.strip():
-                e.tail = i + "  "
-        if not e.tail or not e.tail.strip():
-            e.tail = i
-    else:
-        if level and (not elem.tail or not elem.tail.strip()):
-            elem.tail = i
-            
-############# Elements to Lists ##################  
 def pointsListFromPathEl(pathEl):
     pointsList=[]
     for pointEl in pathEl.getiterator("point"):
@@ -41,8 +20,7 @@ def pointListFromPointEl(pointEl):
         val = float(el.text)
         pList[index]=val
     return pList
-    
-############# Lists to elements ##################
+
 def pathFromPointsList(pointsList, id=0, speed=10):
     p = Element("path")
     
@@ -117,7 +95,7 @@ def dimensions(fabTree, name=None):
             
             
     return (minvalues,maxvalues)
-       
+
 def startpath(fabTree, number):
     root = fabTree.getroot()
     cmd = root.find("commands")
@@ -181,7 +159,7 @@ def setClearance(fabTree, clearance, speed= 10):
         root.remove(oldcmd)
         root.append(newcmd)
         return fabTree
-        
+
 def xdfl2fab(fabTree):
 
     newroot = Element("fabAtHomePrinter")
@@ -229,7 +207,6 @@ def forEachPoint(fabTree, argFunction, arguments, targetMatId=-1):
                     elements[i].text = "%f"%newvalues[i]
     return fabTree
 
-    
 def scale(fabtree, dx=0, dy=0, dz=0, mid=-1):
     "This will scale element tree and return the tree"
     def scaler(pointvalues, arguments):
@@ -240,7 +217,6 @@ def scale(fabtree, dx=0, dy=0, dz=0, mid=-1):
     values = [dx, dy, dz]
     return forEachPoint(fabTree, scaler, values, id) 
     
-    
 def translate(fabTree, dx=0, dy=0, dz=0,id=-1):
     "This will translate a element tree and return the tree"
     def translator(pointvalues,arguments):
@@ -250,8 +226,6 @@ def translate(fabTree, dx=0, dy=0, dz=0,id=-1):
     
     values = [dx, dy, dz]    
     return forEachPoint(fabTree, translator, values, id) 
-
-
 
 def rotate(fabTree, theta,id=-1):
     "This will rotate element tree and return the tree"
@@ -265,7 +239,6 @@ def rotate(fabTree, theta,id=-1):
         
     return forEachPoint(fabTree, rotator, [theta], id) 
     
-    
 def parity(fabTree, id=-1):
     "This will parity transform the points in the XY plane of a element tree and return the tree"
     def parityor(values,arguments):
@@ -276,19 +249,32 @@ def parity(fabTree, id=-1):
         return newvalues
     
     return forEachPoint(fabTree,parityor,[],id)
-    
-
-
-
 
 if __name__ == '__main__':
     import sys
     todo = sys.argv[1]
     
+    def indent(elem, level=0):
+        # Helper function that fixes the indentation scheme of a given Element object and all of its subelements
+        # Modified from: http://infix.se/2007/02/06/gentlemen-indent-your-xml
+        i = "\n" + level*"  "
+        if len(elem):
+            if not elem.text or not elem.text.strip():
+                elem.text = i + "  "
+            for e in elem:
+                indent(e, level+1)
+                if not e.tail or not e.tail.strip():
+                    e.tail = i + "  "
+            if not e.tail or not e.tail.strip():
+                e.tail = i
+        else:
+            if level and (not elem.tail or not elem.tail.strip()):
+                elem.tail = i
+    
     def print_error():
         print "Incorrect number of arguments, try help"
         print todo
-         print sys.argv
+        print sys.argv
 
     def writeTree(output_file, tree):
 
