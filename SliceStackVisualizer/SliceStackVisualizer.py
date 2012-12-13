@@ -45,13 +45,12 @@ class SliceStackVisualizer(QWidget,  Ui_LayerViewWidget):
         self.layerSlider.setSingleStep(1)
         self.layerSpin.setSingleStep(1)
         
-        
-        #self.connect(self.layerSpin, SIGNAL("valueChanged(int)"), self.loadLayer)
-        #self.connect(self.layerSlider, SIGNAL("valueChanged(int)"), self.loadLayer)
         self.layerSpin.valueChanged.connect(self.requestLayerChange)
+        self.layerSlider.valueChanged.connect(self.requestLayerChange)
         self.grabKeyboard()
 
     def requestLayerChange(self):
+        print "request change"
         self.changeLayer.emit(self.layerSpin.value())
         
         

@@ -1,8 +1,6 @@
 ########################Imports####################################################
 from xml.etree.ElementTree import ElementTree, Element 
 import xml.etree.ElementTree as etree
-from math import cos, sin, pi
-
 
 from PyQt4.QtCore import *
 ####################################################################################
