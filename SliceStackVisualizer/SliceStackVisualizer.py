@@ -28,7 +28,6 @@ class SliceStackVisualizer(QWidget,  Ui_LayerViewWidget):
         self.clearBetweenLayers = True
         
         
-        
         #Set up GUI
 
         self.layerView.setScene(QGraphicsScene(self.layerView))
@@ -50,9 +49,9 @@ class SliceStackVisualizer(QWidget,  Ui_LayerViewWidget):
         self.grabKeyboard()
 
     def requestLayerChange(self):
-        print "request change"
         self.changeLayer.emit(self.layerSpin.value())
         
+    
         
     def keyPressEvent(self, event):
         if event.key()==Qt.Key_Home:

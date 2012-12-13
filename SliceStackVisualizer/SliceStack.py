@@ -37,10 +37,7 @@ class SliceStack():
                     else: loopElType = 0
                     
                     if((loopElType == loopType) or (loopType not in [1,2])):
-                        print "Called"
                         loops.append(self.loop2LineStack(loopEl))
-                    else:
-                        print "Skipped type is %i"%loopElType
         return loops
         
                         
@@ -49,7 +46,7 @@ class SliceStack():
         lines =[]
         
         ## NEW VERSION THAT USES ETREE directly
-        previouspoint = self.qPointFFromEl(loopEl.find("point"))
+        previouspoint = self.qPointFFromEl(loopEl.findall("point")[-1])
         for pointEl in loopEl.iter("point"):
             newpoint = self.qPointFFromEl(pointEl)
             lines.append(QLineF(previouspoint,newpoint ))
