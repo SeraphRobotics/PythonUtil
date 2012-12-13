@@ -38,6 +38,8 @@ class SliceStack():
                     
                     if((loopElType == loopType) or (loopType not in [1,2])):
                         loops.append(self.loop2LineStack(loopEl))
+                    else:
+                        print "Skipped"
         return loops
         
                         
