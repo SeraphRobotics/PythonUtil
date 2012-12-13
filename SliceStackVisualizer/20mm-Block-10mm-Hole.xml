@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<stack>
+ <slice number="0">
+  <z>0.7</z>
+  <SliceMaterial id="0">
+   <region>
+    <loop type="inner">
+     <point>
+      <x>16.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>12.3486</y>
+     </point>
+    </loop>
+   </region>
+  </SliceMaterial>
+ </slice>
+ <slice number="1">
+  <z>1.4</z>
+  <SliceMaterial id="0">
+   <region>
+    <loop type="inner">
+     <point>
+      <x>16.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>13.7486</y>
+     </point>
+    </loop>
+   </region>
+  </SliceMaterial>
+ </slice>
+ <slice number="2">
+  <z>2.1</z>
+  <SliceMaterial id="0">
+   <region>
+    <loop type="inner">
+     <point>
+      <x>16.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>15.1486</y>
+     </point>
+    </loop>
+   </region>
+  </SliceMaterial>
+ </slice>
+ <slice number="3">
+  <z>2.8</z>
+  <SliceMaterial id="0">
+   <region>
+    <loop type="inner">
+     <point>
+      <x>16.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>16.5486</y>
+     </point>
+    </loop>
+   </region>
+  </SliceMaterial>
+ </slice>
+ <slice number="4">
+  <z>3.5</z>
+  <SliceMaterial id="0">
+   <region>
+    <loop type="inner">
+     <point>
+      <x>16.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>17.9486</y>
+     </point>
+    </loop>
+   </region>
+  </SliceMaterial>
+ </slice>
+ <slice number="5">
+  <z>4.2</z>
+  <SliceMaterial id="0">
+   <region>
+    <loop type="inner">
+     <point>
+      <x>16.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>19.3486</y>
+     </point>
+    </loop>
+   </region>
+  </SliceMaterial>
+ </slice>
+ <slice number="6">
+  <z>4.9</z>
+  <SliceMaterial id="0">
+   <region>
+    <loop type="inner">
+     <point>
+      <x>16.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>20.7486</y>
+     </point>
+    </loop>
+   </region>
+  </SliceMaterial>
+ </slice>
+ <slice number="7">
+  <z>5.6</z>
+  <SliceMaterial id="0">
+   <region>
+    <loop type="inner">
+     <point>
+      <x>16.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>22.1486</y>
+     </point>
+    </loop>
+   </region>
+  </SliceMaterial>
+ </slice>
+ <slice number="8">
+  <z>6.3</z>
+  <SliceMaterial id="0">
+   <region>
+    <loop type="inner">
+     <point>
+      <x>16.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>23.5486</y>
+     </point>
+    </loop>
+   </region>
+  </SliceMaterial>
+ </slice>
+ <slice number="9">
+  <z>7</z>
+  <SliceMaterial id="0">
+   <region>
+    <loop type="inner">
+     <point>
+      <x>16.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>24.9486</y>
+     </point>
+    </loop>
+   </region>
+  </SliceMaterial>
+ </slice>
+ <slice number="10">
+  <z>7.7</z>
+  <SliceMaterial id="0">
+   <region>
+    <loop type="inner">
+     <point>
+      <x>16.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>26.3486</y>
+     </point>
+    </loop>
+   </region>
+  </SliceMaterial>
+ </slice>
+ <slice number="11">
+  <z>8.4</z>
+  <SliceMaterial id="0">
+   <region>
+    <loop type="inner">
+     <point>
+      <x>16.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>27.7486</y>
+     </point>
+    </loop>
+   </region>
+  </SliceMaterial>
+ </slice>
+ <slice number="12">
+  <z>9.1</z>
+  <SliceMaterial id="0">
+   <region>
+    <loop type="inner">
+     <point>
+      <x>16.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>29.1486</y>
+     </point>
+    </loop>
+   </region>
+  </SliceMaterial>
+ </slice>
+ <slice number="13">
+  <z>9.8</z>
+  <SliceMaterial id="0">
+   <region>
+    <loop type="inner">
+     <point>
+      <x>16.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>10.9486</y>
+     </point>
+     <point>
+      <x>36.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>30.9486</y>
+     </point>
+     <point>
+      <x>16.745</x>
+      <y>30.5486</y>
+     </point>
+    </loop>
+   </region>
+  </SliceMaterial>
+ </slice>
+</stack>
