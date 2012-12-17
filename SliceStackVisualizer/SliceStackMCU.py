@@ -24,11 +24,12 @@ class SliceStackMCU(QObject):
         i = self.UI.layerSpin.value()
         self.setLayer(i)
     
-    @pyqtSlot(int)
-    def setLayer(self,int):
+
+    def setLayer(self,index,type=0):
         zs= self.stack.getZs()
-        z = zs[int]
-        self.UI.loadLoops(self.stack.getLoops(z))
+        z = zs[index]
+        print "set Layer type %i"%type
+        self.UI.loadLoops(self.stack.getLoops(z,type))
         self.UI.setZ(z)
 
         

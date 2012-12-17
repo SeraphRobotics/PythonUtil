@@ -19,7 +19,7 @@ class SliceStackVisualizer(QWidget,  Ui_LayerViewWidget):
     to change layers, hit up arrow to change layer + , down arrow to change layer -
     
     """
-    changeLayer = pyqtSignal(int)
+    changeLayer = pyqtSignal(int,int)
     
     def __init__(self):
         super(SliceStackVisualizer, self).__init__()
@@ -44,14 +44,40 @@ class SliceStackVisualizer(QWidget,  Ui_LayerViewWidget):
         self.layerSlider.setSingleStep(1)
         self.layerSpin.setSingleStep(1)
         
+        self.innerCheck.setChecked(True)
+        self.outerCheck.setChecked(True)
+        
+        
+        #################connections
         self.layerSpin.valueChanged.connect(self.requestLayerChange)
         self.layerSlider.valueChanged.connect(self.requestLayerChange)
+        self.outerCheck.clicked.connect(self._on_outerCheck)
+        self.innerCheck.clicked.connect(self._on_innerCheck)
+        
         self.grabKeyboard()
 
     def requestLayerChange(self):
-        self.changeLayer.emit(self.layerSpin.value())
+        type = 0
+        if (self.outerCheck.isChecked() and self.innerCheck.isChecked()): 
+            type = 0
+        elif (self.outerCheck.isChecked() and not self.innerCheck.isChecked()): 
+            type = 2
+        elif (not self.outerCheck.isChecked() and self.innerCheck.isChecked()): 
+            type = 1
+        elif (not self.outerCheck.isChecked() and not self.innerCheck.isChecked()): 
+            type = 0
+            
+        self.changeLayer.emit(self.layerSpin.value(),type)
         
-    
+    def _on_outerCheck(self):
+        if (not self.outerCheck.isChecked() and not self.innerCheck.isChecked()): 
+            self.innerCheck.setChecked(True)
+        self.requestLayerChange()
+    def _on_innerCheck(self):
+        if (not self.outerCheck.isChecked() and not self.innerCheck.isChecked()): 
+            self.outerCheck.setChecked(True)
+        self.requestLayerChange()
+        
         
     def keyPressEvent(self, event):
         if event.key()==Qt.Key_Home:

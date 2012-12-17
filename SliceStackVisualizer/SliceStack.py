@@ -32,9 +32,10 @@ class SliceStack():
         for slicematerialEl in slice.iter("slicematerial"):
             for regionEl in slicematerialEl.iter("region"):
                 for loopEl in regionEl.iter("loop"):
+                    loopElType = 0
                     if (loopEl.attrib['type'] == 'outer'): loopElType = self.outer
                     elif (loopEl.attrib['type'] == 'inner'): loopElType = self.inner
-                    else: loopElType = 0
+                    print "looking for %i, found %i "%(loopType,loopElType) 
                     
                     if((loopElType == loopType) or (loopType not in [1,2])):
                         loops.append(self.loop2LineStack(loopEl))
