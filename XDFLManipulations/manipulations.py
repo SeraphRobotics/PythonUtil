@@ -247,10 +247,10 @@ def parity(fabTree, id=-1):
     
     return forEachPoint(fabTree,parityor,[],id)
 
+if __name__ == '__main__':
+    import sys
+    todo = sys.argv[1]
     
-    
-    
-#####################################################
     def indent(elem, level=0):
         # Helper function that fixes the indentation scheme of a given Element object and all of its subelements
         # Modified from: http://infix.se/2007/02/06/gentlemen-indent-your-xml
@@ -274,13 +274,7 @@ def parity(fabTree, id=-1):
         indent(tree.getroot())
         string = etree.tostring(tree.getroot())
         f.write(string)
-        f.close()    
-    
-if __name__ == '__main__':
-    import sys
-    todo = sys.argv[1]
-    
-
+        f.close()
     
     def print_error():
         print "Incorrect number of arguments, try help"
@@ -327,7 +321,7 @@ if __name__ == '__main__':
             if len(sys.argv)>2:
                 theta = float(sys.argv[3])
                 fabTree=rotate(fabTree, theta)
-                if len(sys.argv)>4: writeTree(sys.argv[4], fabTree)
+                if len(sys.argv)>3: writeTree(sys.argv[4], fabTree)
                 else: writeTree(sys.argv[2], fabTree)                
             else: print_error()
 
@@ -335,7 +329,7 @@ if __name__ == '__main__':
             # rotate XDFL file 
             print "parity"
             fabTree=parity(fabTree)
-            if len(sys.argv)>3: writeTree(sys.argv[3],fabTree)
+            if len(sys.argv)>2: writeTree(sys.argv[3],fabTree)
             else: writeTree(sys.argv[2],fabTree)
             
         elif todo == "dimensions":
@@ -345,18 +339,18 @@ if __name__ == '__main__':
         elif todo == "startpath":
             number = float(sys.argv[3])
             fabTree=startpath(fabTree,number)
-            if len(sys.argv)>4: writeTree(sys.argv[4],fabTree)
+            if len(sys.argv)>3: writeTree(sys.argv[4],fabTree)
             else: writeTree(sys.argv[2],fabTree)
             
         elif todo == "dropclearance":
             fabTree=dropClearance(fabTree)
-            if len(sys.argv)>3: writeTree(sys.argv[3],fabTree)
+            if len(sys.argv)>2: writeTree(sys.argv[3],fabTree)
             else: writeTree(sys.argv[2],fabTree)
             
         elif todo == "setclearance":
             clearance = float(sys.argv[3])
             speed = 10
-            if len(sys.argv)>4: speed = float(sys.argv[4])
+            if len(sys.argv)>3: speed = float(sys.argv[4])
             fabTree=setClearance(fabTree,clearance,speed)
             writeTree(sys.argv[2],fabTree)
             
