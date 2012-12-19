@@ -158,7 +158,7 @@ def setClearance(fabTree, clearance, speed= 10):
         return fabTree
 
 def xdfl2fab(fabTree):
-
+    ### NEED TO TRANSFORM MATERIALS############
     newroot = Element("fabAtHomePrinter")
     newTree = ElementTree(newroot)
     pathaccel = Element("printAcceleration")
@@ -236,7 +236,7 @@ def rotate(fabTree, theta,id=-1):
         
     return forEachPoint(fabTree, rotator, [theta], id) 
     
-def parity(fabTree, id=-1):
+def parity(fabTree, id=-1, id=-1):
     "This will parity transform the points in the XY plane of a element tree and return the tree"
     def parityor(values,arguments):
         newvalues=[0,0,0]
@@ -247,8 +247,25 @@ def parity(fabTree, id=-1):
     
     return forEachPoint(fabTree,parityor,[],id)
 
+def mirror(fabTree, axisname, id=-1):
     
-    
+    def glass(values,arguments):
+        axisname = arguments[0]
+        axisname.lower()
+        axes = ["x","y","z"]
+        signs=[1,1,1]
+        for i in range(0,len(axes)):
+            signs[i] = 2*int(axisname==axes[i])-1
+        
+        newvalues=[0,0,0]
+        for i in arguments:
+            signs[i]=-1
+        
+        for i in range(0,len(values)):
+            newvalues[i] = signs[i]*values[i]
+        
+        return newvalues
+    return forEachPoint(fabTree,glass,[axisname],id)
     
 #####################################################
     def indent(elem, level=0):
@@ -292,6 +309,7 @@ if __name__ == '__main__':
         print " translate\tmanipulations.py translate 'file name' x y z (id)"
         print " rotate  \tmanipulations.py rotate 'file name' theta ('write name')"
         print " parity  \tmanipulations.py parity 'file name' ('write name')"
+        print " mirror  \tmanipulations.py mirror 'file name' ('write name')"
         print " startpath\tmanipulations.py startpath 'file name' index ('write name')"
         print " dimensions\tmanipulations.py dimensions 'file name' "
         print " drop clearance\tmanipulations.py dropclearance 'filename' ('write name')"
@@ -323,7 +341,6 @@ if __name__ == '__main__':
             else: print_error()
         
         elif todo == "rotate":
-            # rotate XDFL file 
             if len(sys.argv)>2:
                 theta = float(sys.argv[3])
                 fabTree=rotate(fabTree, theta)
@@ -332,12 +349,13 @@ if __name__ == '__main__':
             else: print_error()
 
         elif todo == "parity":
-            # rotate XDFL file 
-            print "parity"
             fabTree=parity(fabTree)
             if len(sys.argv)>3: writeTree(sys.argv[3],fabTree)
             else: writeTree(sys.argv[2],fabTree)
-            
+        elif todo == "miror": 
+            fabTree=mirror(fabTree)
+            if len(sys.argv)>3: writeTree(sys.argv[3],fabTree)
+            else: writeTree(sys.argv[2],fabTree)            
         elif todo == "dimensions":
             (minvalues,maxvalues) = dimensions(fabTree)
             print minvalues,maxvalues
@@ -361,7 +379,6 @@ if __name__ == '__main__':
             writeTree(sys.argv[2],fabTree)
             
         elif todo == "scale":
-            #translate fabfile x yz
             if len(sys.argv)>6:
                 x = float(sys.argv[3])
                 y = float(sys.argv[4])
