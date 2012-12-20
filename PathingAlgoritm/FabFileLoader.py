@@ -33,6 +33,14 @@ from Point import *
 from xml.etree.ElementTree import ElementTree 
 
 
+XDFL = True
+if(XDFL):
+    mattag = "material"
+    matIDtag = "materialid"
+else:
+    mattag = "materialCalibration"
+    matIDtag = "materialCalibrationName"
+
 class Path:
     def __init__(self, material=None,  speed = None):
         self.material = material
@@ -81,26 +89,45 @@ def processFabFile(fabfile):
     http://docs.python.org/library/xml.etree.elementtree.html
     """
     doc = ElementTree(file = fabfile )
+    for el in doc.iter(): el.tag = el.tag.lower()
+
     materials={}
     pathstack=[]
     
+    idNameDict={}
+    
     #Populate Materials
-    for materialTag in doc.getroot().findall("materialCalibration"):
-        material = Material(materialTag.findall("name")[0].text)
+    for materialTag in doc.iter(mattag):
+        name = materialTag.find("name").text
+        if (XDFL):
+            id = materialTag.find("id").text
+        else:
+            id = name
+        idNameDict[id]=name
+ 
+        
+        material = Material(name)
+
         for propertyTag in materialTag.getchildren(): material.setProperty(propertyTag.tag, propertyTag.text)
         materials[material.name]=material
         
     #Make Path Stack
-    for element in doc.getiterator():
-        if ("path" == element.tag.lower()):
-            path=Path(element.findall("materialCalibrationName")[0].text)
-            pathstack.append(path)
-        elif("point"==element.tag.lower()):
-            x = float(element.findall("x")[0].text)
-            y = float(element.findall("y")[0].text)
-            z = float(element.findall("z")[0].text)
-            p=Point(x, y, z)
-            pathstack[-1].appendPoint(p)
+    for element in doc.iter("path"):
+        idEl = element.find(matIDtag)
+        if (type(idEl)!=type(None)):
+            if(idNameDict.has_key(idEl.text)):
+                path=Path(idNameDict[idEl.text])
+                for point in element.iter("point"):
+                    x = float(point.find("x").text)
+                    y = float(point.find("y").text)
+                    z = float(point.find("z").text)
+                    p=Point(x, y, z)
+                    path.appendPoint(p)
+                if not len(path.getPoints()):
+                    print "no points? for path with id ", idEl.text
+                else:
+                    print "path with id", idEl.text
+                    pathstack.append(path)
     return (materials, pathstack)
 
 

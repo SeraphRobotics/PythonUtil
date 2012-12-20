@@ -262,6 +262,10 @@ def sortPathsIntoLayers(pathstack, direction=2):
     slices={}
     for path in pathstack:
         slicekey = 0 
+        if not len(path.getPoints()):
+            print "no points"
+            continue
+        
         if (direction ==2): 
             slicekey = path.getPoints()[0].z()
         elif (direction ==1): 

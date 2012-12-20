@@ -3,7 +3,13 @@ from xml.etree.ElementTree import ElementTree, Element
 import xml.etree.ElementTree as etree
 from math import cos, sin, pi
 
-########################Helper Functions###########################################
+
+######################## Global Defs ################################################
+axes = ["x", "y", "z"]
+######################## Helper Functions ###########################################
+
+
+
 def pointsListFromPathEl(pathEl):
     pointsList=[]
     for pointEl in pathEl.getiterator("point"):
@@ -12,7 +18,6 @@ def pointsListFromPathEl(pathEl):
     return pointsList
 
 def pointListFromPointEl(pointEl):
-    axes = ["x", "y", "z"]
     indecies = [0,1,2]
     pList=[0,0,0]
     for index in indecies:
@@ -42,7 +47,6 @@ def pathFromPointsList(pointsList, id=0, speed=10):
 
 def pointFromList(pointAsList):
     ### Take a point [x,y,z] to XDFL format
-    axes = ["x", "y", "z"]
     indecies = [0,1,2]
     p = Element("point")
     for index in indecies:
@@ -75,7 +79,6 @@ def threshold(fabTree, threshold=0):
     return fabTree
     
 def dimensions(fabTree, name=None):
-    axes = ["x", "y", "z"]
     minvalues = [0, 0, 0]
     maxvalues = [0, 0,0]
     "This will translate a fabFile element tree and return the tree"
@@ -158,7 +161,6 @@ def setClearance(fabTree, clearance, speed= 10):
         return fabTree
 
 def xdfl2fab(fabTree):
-
     newroot = Element("fabAtHomePrinter")
     newTree = ElementTree(newroot)
     pathaccel = Element("printAcceleration")
@@ -173,7 +175,6 @@ def xdfl2fab(fabTree):
     
 ##################MANIPULATIONS ON EACH POINT (OR MATERIAL'S POINTS)###############################
 def forEachPoint(fabTree, argFunction, arguments, targetMatId=-1):
-    axes = ["x", "y", "z"]
     "This will translate a fabFile element tree and return the tree"
     for path in fabTree.getiterator("path"):
         matid=0
@@ -224,18 +225,41 @@ def translate(fabTree, dx=0, dy=0, dz=0,id=-1):
     values = [dx, dy, dz]    
     return forEachPoint(fabTree, translator, values, id) 
 
-def rotate(fabTree, theta,id=-1):
+def rotate(fabTree, theta,axis='z',id=-1):
     "This will rotate element tree and return the tree"
-    def rotator(values,arguments):
+    def rotatorZ(values,arguments):
         thetaInRadians=arguments[0]/180*pi
         newvalues=[0,0,0]
         newvalues[0] = cos(thetaInRadians)*values[0]-sin(thetaInRadians)*values[1]
         newvalues[1] = sin(thetaInRadians)*values[0]+cos(thetaInRadians)*values[1]   
         newvalues[2] = values[2]
         return newvalues
-        
-    return forEachPoint(fabTree, rotator, [theta], id) 
     
+    def rotatorY(values,arguments):
+        thetaInRadians=arguments[0]/180*pi
+        newvalues=[0,0,0]
+        newvalues[0] = cos(thetaInRadians)*values[0]-sin(thetaInRadians)*values[2]
+        newvalues[1] = values[1]   
+        newvalues[2] = sin(thetaInRadians)*values[0]+cos(thetaInRadians)*values[2]
+        return newvalues    
+    
+    def rotatorX(values,arguments):
+        thetaInRadians=arguments[0]/180*pi
+        newvalues=[0,0,0]
+        newvalues[0] = values[0]
+        newvalues[1] = cos(thetaInRadians)*values[1]-sin(thetaInRadians)*values[2]   
+        newvalues[2] = sin(thetaInRadians)*values[1]+cos(thetaInRadians)*values[2]
+        return newvalues        
+    
+    axis.lower()
+    if(axis=='x'):
+        return forEachPoint(fabTree, rotatorX, [theta], id) 
+    elif(axis=='y'):
+        return forEachPoint(fabTree, rotatorY, [theta], id) 
+    elif(axis=='z'):
+        return forEachPoint(fabTree, rotatorZ, [theta], id)     
+        
+        
 def parity(fabTree, id=-1):
     "This will parity transform the points in the XY plane of a element tree and return the tree"
     def parityor(values,arguments):
@@ -251,30 +275,30 @@ def parity(fabTree, id=-1):
     
     
 #####################################################
-    def indent(elem, level=0):
-        # Helper function that fixes the indentation scheme of a given Element object and all of its subelements
-        # Modified from: http://infix.se/2007/02/06/gentlemen-indent-your-xml
-        i = "\n" + level*"  "
-        if len(elem):
-            if not elem.text or not elem.text.strip():
-                elem.text = i + "  "
-            for e in elem:
-                indent(e, level+1)
-                if not e.tail or not e.tail.strip():
-                    e.tail = i + "  "
+def indent(elem, level=0):
+    # Helper function that fixes the indentation scheme of a given Element object and all of its subelements
+    # Modified from: http://infix.se/2007/02/06/gentlemen-indent-your-xml
+    i = "\n" + level*"  "
+    if len(elem):
+        if not elem.text or not elem.text.strip():
+            elem.text = i + "  "
+        for e in elem:
+            indent(e, level+1)
             if not e.tail or not e.tail.strip():
-                e.tail = i
-        else:
-            if level and (not elem.tail or not elem.tail.strip()):
-                elem.tail = i
+                e.tail = i + "  "
+        if not e.tail or not e.tail.strip():
+            e.tail = i
+    else:
+        if level and (not elem.tail or not elem.tail.strip()):
+            elem.tail = i
 
-    def writeTree(output_file, tree):
-        f = open(output_file, 'w')
-        f.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?> \n")
-        indent(tree.getroot())
-        string = etree.tostring(tree.getroot())
-        f.write(string)
-        f.close()    
+def writeTree(output_file, tree):
+    f = open(output_file, 'w')
+    f.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?> \n")
+    indent(tree.getroot())
+    string = etree.tostring(tree.getroot())
+    f.write(string)
+    f.close()    
     
 if __name__ == '__main__':
     import sys
@@ -290,7 +314,7 @@ if __name__ == '__main__':
     if todo== "help":
         print " theshold\tmanipulations.py threshold 'file name' ('write name')"
         print " translate\tmanipulations.py translate 'file name' x y z (id)"
-        print " rotate  \tmanipulations.py rotate 'file name' theta ('write name')"
+        print " rotate  \tmanipulations.py rotate 'file name' theta axis('write name')"
         print " parity  \tmanipulations.py parity 'file name' ('write name')"
         print " startpath\tmanipulations.py startpath 'file name' index ('write name')"
         print " dimensions\tmanipulations.py dimensions 'file name' "
@@ -326,8 +350,9 @@ if __name__ == '__main__':
             # rotate XDFL file 
             if len(sys.argv)>2:
                 theta = float(sys.argv[3])
-                fabTree=rotate(fabTree, theta)
-                if len(sys.argv)>4: writeTree(sys.argv[4], fabTree)
+                axis = sys.argv[4]
+                fabTree=rotate(fabTree,theta,axis)
+                if len(sys.argv)>5: writeTree(sys.argv[5], fabTree)
                 else: writeTree(sys.argv[2], fabTree)                
             else: print_error()
 
