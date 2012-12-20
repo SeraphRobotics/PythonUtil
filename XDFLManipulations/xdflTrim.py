@@ -3,7 +3,7 @@ import xml.etree.ElementTree as etree
 from math import cos, sin, pi
 
 from manipulations import *
-
+YThreshold = 0.3
 ZThreshold = 0.1
 vThresh1 = 100
 vThresh2 = 4
@@ -53,8 +53,8 @@ def removeBottom(fabTree):
         for i in range(1, len(pointEls)):
             pointEl = pointEls[i]
             point_z = float(pointEls[i].find("z").text)
-            previouspointEl = pointEls[i-1]
-            s = abs(slopeZY(pointEl, previouspointEl))
+            #previouspointEl = pointEls[i-1]
+            #s = abs(slopeZY(pointEl, previouspointEl))
             #print "slope on the bottom:", s
             #if (s<HorizThreshold) and (point_z<(minz+ZThreshold)):
             if (point_z<(minz+ZThreshold)):
@@ -65,6 +65,48 @@ def removeBottom(fabTree):
     
     return fabTree
     
+
+def removeSides(fabTree):
+    for PathEl in fabTree.iter("path"):
+        pointEls = PathEl.findall("point")
+        
+        minY=10000
+        maxY=-10000
+        ## find the extreme Ys
+        for pointEl in pointEls:
+            y = listFromPointEl(pointEl)[1]
+            if(y>maxY):maxY = y
+            if(y<minY):minY = y
+        
+        minYDropList = []
+        maxYDropList = []
+        for pointEl in pointEls:
+            y = listFromPointEl(pointEl)[1]
+            if (y < (minY+YThreshold)):
+                minYDropList.append(pointEl)
+            elif ( y>(maxY-YThreshold)):
+                maxYDropList.append(pointEl)
+        
+        ## THIS COULD LEAD to a problem if there is a sharp spike at the end
+        for pointlist in [minYDropList,maxYDropList]:
+            if (len(pointlist)):
+                maxZ = -10000
+                zDict={}
+                for pointEl in pointlist:
+                    z = listFromPointEl(pointEl)[2]
+                    zDict[z] = pointEl
+                    if (z>maxZ): maxZ = z
+                if zDict.has_key(maxZ): 
+                    pointlist.remove(zDict[maxZ])
+                    for pointEl in pointlist:
+                        PathEl.remove(pointEl)
+                else: 
+                    print "could not find point for maxZ: ",maxZ
+                    print "in keys ", zDict.keys()
+                    print "for list ",list 
+    return fabTree
+            
+            
     
 def orderPathsInY(fabTree):
     #axis=2
@@ -77,10 +119,12 @@ def orderPathsInY(fabTree):
         for pointEl in pathEl.iter("point"):
             y = listFromPointEl(pointEl)[1]
             pointYdict[y]=pointEl
+        for pointEl in pathEl.findall("point"):        
             pathEl.remove(pointEl)
         ys = pointYdict.keys()
         ys = sorted(ys, reverse=sortDirection)
-        for y in ys:
+        for i in range(0,len(ys)):
+            y = ys[i]
             pointEl = pointYdict[y]
             pathEl.append(pointEl)
             print "\ty: ", listFromPointEl(pointEl)[1]
@@ -90,6 +134,7 @@ if __name__ == '__main__':
     import sys
     fabTree = ElementTree(file = sys.argv[1])
     fabTree = dropClearance(fabTree)
-    fabTree = removeBottom(fabTree)
-    #fabTree = orderPathsInY(fabTree)
+    #fabTree = removeSides(fabTree)
+    #fabTree = removeBottom(fabTree)
+    fabTree = orderPathsInY(fabTree)
     fabTree.write(sys.argv[2])
