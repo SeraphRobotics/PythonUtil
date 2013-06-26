@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<fabAtHomePrinter>
+    <!--Acceleration in millimeters/(second^2) that is used while printing.-->
+    <printAcceleration>100</printAcceleration>
+    <materialCalibration>
+        <!--Name of the material calibration.-->
+        <name>ABS plastic</name>
+        <!--Top speed in millimeters/second for this tool during execution of path.-->
+        <pathSpeed>4</pathSpeed>
+        <!--Width of the path in millimeters.-->
+        <pathWidth>.5</pathWidth>
+        <pathHeight>.5</pathHeight>
+        <!--(millimeters of plunger motion)/(millimeters tool travel) along deposition path.-->
+        <depositionRate>0.01</depositionRate>
+        <!--Seconds of early dispensing to start flow quickly.-->
+        <pushout>0.1</pushout>
+        <!--Seconds reverse plunger motion to stop flow quickly.-->
+        <suckback>0.1</suckback>
+        <!--Seconds to delay suckback by.-->
+        <suckbackDelay>0</suckbackDelay>
+        <!--Millimeters of clearance between tip and last layer when traversing.-->
+        <clearance>2</clearance>
+        <!--Number of paths after which to trigger an automatic pause.-->
+        <pausePaths>3000</pausePaths>
+        <!--no comment-->
+        <pitch>0.000397</pitch>
+        <temperature>240</temperature>
+    </materialCalibration>
+    <path>
+        <!--The name of the material calibration used during execution of this path.-->
+        <materialCalibrationName>ABS plastic</materialCalibrationName>
+        <point>
+            <x>1</x>
+            <y>1</y>
+            <z>1</z>
+        </point>
+        <point>
+            <x>1</x>
+            <y>-1</y>
+            <z>1</z>
+        </point>
+        <point>
+            <x>-1</x>
+            <y>-1</y>
+            <z>1</z>
+        </point>
+        <point>
+            <x>-1</x>
+            <y>1</y>
+            <z>1</z>
+        </point>
+        <point>
+            <x>1</x>
+            <y>1</y>
+            <z>1</z>
+        </point>
+    </path>
+    <path>
+        <!--The name of the material calibration used during execution of this path.-->
+        <materialCalibrationName>ABS plastic</materialCalibrationName>
+        <point>
+            <x>2</x>
+            <y>2</y>
+            <z>2</z>
+        </point>
+        <point>
+            <x>2</x>
+            <y>-2</y>
+            <z>2</z>
+        </point>
+        <point>
+            <x>-2</x>
+            <y>-2</y>
+            <z>2</z>
+        </point>
+        <point>
+            <x>-2</x>
+            <y>2</y>
+            <z>2</z>
+        </point>
+        <point>
+            <x>2</x>
+            <y>2</y>
+            <z>2</z>
+        </point>
+    </path>
+</fabAtHomePrinter>

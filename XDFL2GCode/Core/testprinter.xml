@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Printer name="test">
+  <gantry>
+    <axis id="x" length="300" actuatorId ="0" revolutionsPerDistance="1"/>
+    <axis id="y" length="300" actuatorId ="1" revolutionsPerDistance="1"/>
+    <axis id="z" length="300" actuatorId ="2" revolutionsPerDistance="1"/>
+  </gantry>
+  
+  <tool name ="Duel Syringe">
+    <bay id ="0" type="extrusion" actuatorId="3" x="0" y="0" z="0" volume="10" revolutionsPerVolume="1"/>
+    <!--Volume=-1 = infinite feed rate units in ml-->
+    <bay id ="1" type="extrusion" actuatorId="4" x="0" y="33" z="0" volume="10" revolutionsPerVolume="1"/>
+  </tool>
+  <!--tool name ="Valve">
+    <bay id ="2" type="Binary" actuatorId="5" x="0" y="0" z="0" volume="10" degreesPerState="10"/>
+  </tool-->
+  
+  <electronics>
+    <!--COM port that printer is connected to.-->
+    <comPort>5</comPort>
+    <!--Baud rate.-->
+    <baudRate>19200</baudRate>
+    <!--Group address of motors that control axes.-->
+    <xyzGroupAddress>128</xyzGroupAddress>
+    
+    
+    <actuator id="0" type="motor/DC with Encoder">
+      <property name="kp" value ="2200" />
+      <property name="kd" value ="30000" />
+      <property name="ki" value ="0" />
+      <property name="il" value ="16000" />
+      <property name="ol" value ="255" />
+      <property name="cl" value ="0" />
+      <property name="el" value ="2200" />
+      <property name="sr" value ="1" />
+      <property name="db" value ="0" />
+      <property name="ticks per second" value ="1953.125" />
+      <countsPerRevolution>1</countsPerRevolution>
+    </actuator>
+    
+    <actuator id="1" type="motor/DC with Encoder">
+      <property name="kp" value ="1200" />
+      <property name="kd" value ="23000" />
+      <property name="ki" value ="0" />
+      <property name="il" value ="16000" />
+      <property name="ol" value ="255" />
+      <property name="cl" value ="0" />
+      <property name="el" value ="32767" />
+      <property name="sr" value ="1" />
+      <property name="db" value ="0" />
+      <property name="ticks per second" value ="1953.125" />
+      <countsPerRevolution>1</countsPerRevolution>
+    </actuator>
+    
+    <actuator id="2" type="motor/DC with Encoder">
+      <property name="kp" value ="1200" />
+      <property name="kd" value ="23000" />
+      <property name="ki" value ="0" />
+      <property name="il" value ="16000" />
+      <property name="ol" value ="255" />
+      <property name="cl" value ="0" />
+      <property name="el" value ="32767" />
+      <property name="sr" value ="1" />
+      <property name="db" value ="0" />
+      <property name="ticks per second" value ="1953.125" />
+      <countsPerRevolution>1</countsPerRevolution>
+    </actuator>
+    
+    <actuator id="3" type="motor/DC with Encoder">
+      <property name="kp" value ="1800" />
+      <property name="kd" value ="16000" />
+      <property name="ki" value ="0" />
+      <property name="il" value ="0" />
+      <property name="ol" value ="255" />
+      <property name="cl" value ="0" />
+      <property name="el" value ="32767" />
+      <property name="sr" value ="1" />
+      <property name="db" value ="0" />
+      <property name="ticks per second" value ="1953.125" />
+      <countsPerRevolution>1</countsPerRevolution>
+    </actuator>
+    
+    <actuator id="4" type="motor/DC with Encoder">
+      <property name="kp" value ="1800" />
+      <property name="kd" value ="16000" />
+      <property name="ki" value ="0" />
+      <property name="il" value ="0" />
+      <property name="ol" value ="255" />
+      <property name="cl" value ="0" />
+      <property name="el" value ="32767" />
+      <property name="sr" value ="1" />
+      <property name="db" value ="0" />
+      <property name="ticks per second" value ="1953.125" />
+      <countsPerRevolution>1</countsPerRevolution>
+    </actuator>
+    
+  </electronics>
+
+
+  <motion>
+    <!-- Where does this Belong-->
+    <acceleration>100</acceleration>
+    <warmUp>
+      <!-- This should be an XDFL script for startup -->
+    </warmUp>
+    <coolDown>
+      <!-- This should be an XDFL script for shutdown -->
+      <script type="xdfl"><![CDATA[<path><point x="0" y="0" z="0"/></path>]]></script>
+    </coolDown>
+  </motion>
+
+</Printer>

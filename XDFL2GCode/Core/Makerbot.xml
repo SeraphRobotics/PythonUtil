@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Printer name="Makerbot">
+  <gantry>
+    <axis id="x" length="300" actuatorId ="0" revolutionsPerDistance="1"/>
+    <axis id="y" length="300" actuatorId ="1" revolutionsPerDistance="1"/>
+    <axis id="z" length="300" actuatorId ="2" revolutionsPerDistance="1"/>
+  </gantry>
+  
+  <tool name ="Pinch Wheel Extruder 1.1">
+    <bay id ="0" type="extrusion" actuatorId="3" x="0" y="0" z="0" volume="0" revolutionsPerVolume="1.75"/>
+  </tool>
+  
+  <electronics>
+    <!--COM port that printer is connected to.-->
+    <comPort>5</comPort>
+    <!--Baud rate.-->
+    <baudRate>38400</baudRate>
+    <!--Group address of motors that control axes.-->
+    <parity>8</parity>
+    
+    
+    <actuator id="0" type="motor/Stepper">
+      <countsPerRevolution>236.239</countsPerRevolution>
+    </actuator>
+    
+    <actuator id="1" type="motor/Stepper">
+      <countsPerRevolution>236.239</countsPerRevolution>
+    </actuator>
+    
+    <actuator id="2" type="motor/Stepper">
+      <countsPerRevolution>284.900</countsPerRevolution>
+    </actuator>
+    
+    <actuator id="3" type="motor/DC ">
+      <countsPerRevolution>17409.1142</countsPerRevolution>
+    </actuator>
+    
+  </electronics>
+
+
+  <motion>
+    <acceleration>100</acceleration>
+    <warmUp>
+        <script type="G-Code">
+        <![CDATA[
+        G21
+        G90
+        G28
+        M103
+        M105 
+        M104 S247.0 
+        G1 X0.0 Y0.0 Z0.0 F480.0 
+        M101
+        ]]></script>
+    </warmUp>
+    <coolDown>
+      <script type="G-Code"><![CDATA[
+      G91
+      G1 Z40 F60
+      M18]]></script>
+    </coolDown>
+  </motion>
+
+</Printer>

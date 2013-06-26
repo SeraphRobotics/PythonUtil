@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>favicon.ico</file>
+        <file>makerbot.jpg</file>
+        <file>reprap.jpg</file>
+        <file>BFB3k.jpg</file>
+    </qresource>
+</RCC>

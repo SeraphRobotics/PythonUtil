@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Tasks SYSTEM "Tasks-4.2.dtd">
+<!-- eric4 tasks file for project GCode Converter -->
+<!-- Saved: 2013-06-26, 16:36:12 -->
+<Tasks version="4.2">
+  <Task priority="1" completed="False" bugfix="False">
+    <Summary>TODO: flush out Print pausing and feedback</Summary>
+    <Description></Description>
+    <Created>2010-06-03, 21:14:21</Created>
+    <Resource>
+      <Filename>Controller.py</Filename>
+      <Linenumber>60</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" bugfix="False">
+    <Summary>TODO: impliment material bay switching.</Summary>
+    <Description></Description>
+    <Created>2010-06-03, 21:14:21</Created>
+    <Resource>
+      <Filename>Controller.py</Filename>
+      <Linenumber>80</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" bugfix="False">
+    <Summary>TODO: FIX scalling</Summary>
+    <Description></Description>
+    <Created>2010-06-03, 22:44:29</Created>
+    <Resource>
+      <Filename>Point.py</Filename>
+      <Linenumber>74</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" bugfix="False">
+    <Summary>TODO: generate configuration string from printer</Summary>
+    <Description></Description>
+    <Created>2010-06-04, 14:38:42</Created>
+    <Resource>
+      <Filename>CommandGenerators.py</Filename>
+      <Linenumber>47</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" bugfix="False">
+    <Summary>TODO: return movement command formatted for Stephan</Summary>
+    <Description></Description>
+    <Created>2010-06-04, 14:38:42</Created>
+    <Resource>
+      <Filename>CommandGenerators.py</Filename>
+      <Linenumber>90</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" bugfix="False">
+    <Summary>TODO: enviromental values need to be set.</Summary>
+    <Description></Description>
+    <Created>2010-06-04, 23:23:33</Created>
+    <Resource>
+      <Filename>Converter.py</Filename>
+      <Linenumber>69</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" bugfix="False">
+    <Summary>TODO: impliment material bay switching.</Summary>
+    <Description></Description>
+    <Created>2010-06-04, 23:23:33</Created>
+    <Resource>
+      <Filename>Converter.py</Filename>
+      <Linenumber>82</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" bugfix="False">
+    <Summary>TODO: Shouldn't ignore small suck backs. Should wrap around paths. to previous points</Summary>
+    <Description></Description>
+    <Created>2010-06-04, 23:23:33</Created>
+    <Resource>
+      <Filename>Converter.py</Filename>
+      <Linenumber>126</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" bugfix="False">
+    <Summary>TODO: impliment path speed defaulting</Summary>
+    <Description></Description>
+    <Created>2010-06-04, 23:23:33</Created>
+    <Resource>
+      <Filename>Converter.py</Filename>
+      <Linenumber>161</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" bugfix="False">
+    <Summary>TODO: FIX scalling</Summary>
+    <Description></Description>
+    <Created>2010-06-05, 02:24:11</Created>
+    <Resource>
+      <Filename>Core/Point.py</Filename>
+      <Linenumber>74</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" bugfix="False">
+    <Summary>TODO: generate configuration string from printer</Summary>
+    <Description></Description>
+    <Created>2010-06-05, 02:55:20</Created>
+    <Resource>
+      <Filename>Core/CommandGenerators.py</Filename>
+      <Linenumber>47</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" bugfix="False">
+    <Summary>TODO: return movement command formatted for Stephan</Summary>
+    <Description></Description>
+    <Created>2010-06-05, 02:55:20</Created>
+    <Resource>
+      <Filename>Core/CommandGenerators.py</Filename>
+      <Linenumber>90</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" bugfix="False">
+    <Summary>TODO: enviromental values need to be set.</Summary>
+    <Description></Description>
+    <Created>2013-06-26, 16:25:40</Created>
+    <Resource>
+      <Filename>Core/Converter.py</Filename>
+      <Linenumber>69</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" bugfix="False">
+    <Summary>TODO: impliment material bay switching.</Summary>
+    <Description></Description>
+    <Created>2013-06-26, 16:25:40</Created>
+    <Resource>
+      <Filename>Core/Converter.py</Filename>
+      <Linenumber>82</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" bugfix="False">
+    <Summary>TODO: Shouldn't ignore small suck backs. Should wrap around paths. to previous points</Summary>
+    <Description></Description>
+    <Created>2013-06-26, 16:25:40</Created>
+    <Resource>
+      <Filename>Core/Converter.py</Filename>
+      <Linenumber>126</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" bugfix="False">
+    <Summary>TODO: impliment path speed defaulting</Summary>
+    <Description></Description>
+    <Created>2013-06-26, 16:25:40</Created>
+    <Resource>
+      <Filename>Core/Converter.py</Filename>
+      <Linenumber>161</Linenumber>
+    </Resource>
+  </Task>
+</Tasks>
