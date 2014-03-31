@@ -72,6 +72,7 @@ class FabFileVisualizer(QWidget,  Ui_LayerViewWidget):
         self.layerSpin.setSingleStep(1)
         self.connect(self.layerSpin, SIGNAL("valueChanged(int)"), self.loadLayer)
         self.connect(self.layerSlider, SIGNAL("valueChanged(int)"), self.loadLayer)
+        self.connect(self.fileButton, SIGNAL("clicked()"),self.loadFile)
         
         self.grabKeyboard()
 
@@ -120,8 +121,13 @@ class FabFileVisualizer(QWidget,  Ui_LayerViewWidget):
     def zoomOut(self):
         self.layerView.scale(.9, .9)
         
+    def loadFile(self):
+        fname = QtGui.QFileDialog.getOpenFileName(self, 'Open file', '.')
+        self.loadFabFile(fname)
+        
     def loadFabFile(self, fabFile):
         self.fabFile=fabFile
+        self.fileLineEdit.setText(fabFile)
         (materials, pathstack)=processFabFile(fabFile)
         self.setMaterials(materials)
         layers= sortPathsIntoLayers(pathstack)
