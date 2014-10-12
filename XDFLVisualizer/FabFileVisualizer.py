@@ -123,7 +123,8 @@ class FabFileVisualizer(QWidget,  Ui_LayerViewWidget):
         
     def loadFile(self):
         fname = QtGui.QFileDialog.getOpenFileName(self, 'Open file', '.')
-        self.loadFabFile(fname)
+        if fname:
+            self.loadFabFile(fname)
         
     def loadFabFile(self, fabFile):
         self.fabFile=fabFile
