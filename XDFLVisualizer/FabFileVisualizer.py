@@ -49,6 +49,10 @@ class FabFileVisualizer(QWidget,  Ui_LayerViewWidget):
     def __init__(self, fabFile=None):
         super(FabFileVisualizer, self).__init__()
         self.setupUi(self)
+        self.setWindowTitle("Visualize XDFL")
+        self.setWindowIcon(QtGui.QIcon('main.ico'))
+        
+        
         self.fabFile=fabFile
         self.setLayers([])
         self.showWidth=False
