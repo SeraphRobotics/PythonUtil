@@ -325,6 +325,11 @@ def writeTree(output_file, tree):
     
 if __name__ == '__main__':
     import sys
+
+    if(len (sys.argv)<2 ):
+        todo = "help"
+    else:
+        todo = sys.argv[1]
     
     todo=""
     if (len(sys.argv)>2):

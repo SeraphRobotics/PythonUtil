@@ -84,8 +84,9 @@ def processFabFile(fabfile):
     materials={}
     pathstack=[]
     
+    root = doc.getroot()
     #Populate Materials
-    for materialTag in doc.getroot().findall("material"):
+    for materialTag in root.find("palette").findall("material"):
         material = Material(materialTag.find("id").text)
         for propertyTag in materialTag.getchildren(): material.setProperty(propertyTag.tag, propertyTag.text)
         materials[material.name]=material
@@ -105,9 +106,12 @@ def processFabFile(fabfile):
 #            p=Point(x, y, z)
 #            pathstack[-1].appendPoint(p)
             
-            
-    for pathel in doc.getiterator("path"):
-        matids = pathel.findall("materialid")
+    cmds = root.find("commands")
+    #print len(cmds.findall("path"))
+    for pathel in cmds.getiterator("path"):
+        #print "path:"
+        matids = pathel.findall("materialID")
+        matids.extend(pathel.findall("materialid"))
         if (0!=len(matids)):
             path=Path(matids[0].text)
             pathstack.append(path)
@@ -117,6 +121,7 @@ def processFabFile(fabfile):
                 y = float(point.find("y").text)
                 z = float(point.find("z").text)
                 p=Point(x, y, z)
+                #print "Adding point :%f,%f,%f"%(x,y,z)
                 pathstack[-1].appendPoint(p)
     
     return (materials, pathstack)

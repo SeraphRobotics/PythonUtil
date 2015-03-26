@@ -22,3 +22,4 @@ If the plugins are not reachable, then QPixmap.load/loadFromData will return Fal
 
 This will work with bundle_files as well, but you need to exclude the Qt DLLs from bundle (using the dll_excludes option) and add them to the directory with the executable through some other mechanism (such as data_files).
 '''
+

@@ -49,6 +49,10 @@ class FabFileVisualizer(QWidget,  Ui_LayerViewWidget):
     def __init__(self, fabFile=None):
         super(FabFileVisualizer, self).__init__()
         self.setupUi(self)
+        self.setWindowTitle("Visualize XDFL")
+        self.setWindowIcon(QtGui.QIcon('main.ico'))
+        
+        
         self.fabFile=fabFile
         self.setLayers([])
         self.showWidth=False
@@ -72,6 +76,7 @@ class FabFileVisualizer(QWidget,  Ui_LayerViewWidget):
         self.layerSpin.setSingleStep(1)
         self.connect(self.layerSpin, SIGNAL("valueChanged(int)"), self.loadLayer)
         self.connect(self.layerSlider, SIGNAL("valueChanged(int)"), self.loadLayer)
+        self.connect(self.fileButton, SIGNAL("clicked()"),self.loadFile)
         
         self.grabKeyboard()
 
@@ -120,9 +125,17 @@ class FabFileVisualizer(QWidget,  Ui_LayerViewWidget):
     def zoomOut(self):
         self.layerView.scale(.9, .9)
         
+    def loadFile(self):
+        fname = QtGui.QFileDialog.getOpenFileName(self, 'Open file', '.')
+        if fname:
+            self.loadFabFile(fname)
+        
     def loadFabFile(self, fabFile):
         self.fabFile=fabFile
+        self.fileLineEdit.setText(fabFile)
         (materials, pathstack)=processFabFile(fabFile)
+        print materials
+        print len(pathstack)
         self.setMaterials(materials)
         layers= sortPathsIntoLayers(pathstack)
         self.setLayers(layers)
