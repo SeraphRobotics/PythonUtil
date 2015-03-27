@@ -120,7 +120,7 @@ def processFabFile(fabfile):
                 x = float(point.find("x").text)
                 y = float(point.find("y").text)
                 z = float(point.find("z").text)
-                p=Point(x, y, z)
+                p=Point(y, x, z)
                 #print "Adding point :%f,%f,%f"%(x,y,z)
                 pathstack[-1].appendPoint(p)
     

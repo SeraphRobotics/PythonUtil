@@ -134,8 +134,8 @@ class FabFileVisualizer(QWidget,  Ui_LayerViewWidget):
         self.fabFile=fabFile
         self.fileLineEdit.setText(fabFile)
         (materials, pathstack)=processFabFile(fabFile)
-        print materials
-        print len(pathstack)
+        #print materials
+        #print len(pathstack)
         self.setMaterials(materials)
         layers= sortPathsIntoLayers(pathstack)
         self.setLayers(layers)
@@ -176,8 +176,8 @@ class FabFileVisualizer(QWidget,  Ui_LayerViewWidget):
             for path in self.layers[layerInt]:
             
                 materialName = path.getMaterial()
-                print materialName
-                print self.matColors
+                #print materialName
+                #print self.matColors
                 color = QColor(Qt.black) #self.matColors[materialName]
     
                 if self.showWidth:
