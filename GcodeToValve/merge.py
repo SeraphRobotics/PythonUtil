@@ -70,7 +70,7 @@ def processFileIntoLayers(filename,isplastic,verbose):
             newlayer=Layer(z1[0])
             
         if(isplastic==True): newlayer.type = Layer.displacement
-        else: newlayer.stackz+=10;
+        
         newlayer.cmds.append(line)
 
     cmd_group.append(newlayer)
@@ -170,53 +170,6 @@ def parity(layerlist, verbose=False):
                 out_line_list.append(line)
         layer.cmds = out_line_list
     
-def setTopcoatSpeed(layerlist,xyspeed, verbose=False):
-     for layer in layerlist :
-        out_line_list=[]
-        previous=[0]*4
-        for line in layer.cmds:
-            topcoat_match = re.match(r'^G1 X([-\d\.]+) Y([-\d\.]+) Z([-\d\.]+)($| F)*([-\d\.]+)',  ##$
-                             line.rstrip())
-            if topcoat_match:
-                if verbose: print "extrude: ", topcoat_match.groups()
-                p2 =[0]*4
-                delta=[0]*3
-                
-                for j in range(0,4):
-                    group = topcoat_match.groups()[j]
-                    if not (type(group)==type(None)):
-                        if "f" in group.lower():
-                            p2[3]=topcoat_match.groups()[j+1]
-                            break
-                        else:
-                            p2[j]=float(group)
-                speed=""
-                if (previous[0]==0 and previous[1]==0):
-                    if p2[3]>0:
-                        speed = " F%f"%float(p2[3])
-                else:
-                    delta[0] = p2[0]-previous[0]
-                    delta[1] = p2[1]-previous[1]
-                    delta[2] = p2[2]-previous[2]
-                    dxyz = math.sqrt(delta[0]*delta[0]+delta[1]*delta[1]+delta[2]*delta[2])
-                    dxy = math.sqrt(delta[0]*delta[0]+delta[1]*delta[1])
-                    dz = math.sqrt(delta[2]*delta[2])
-                    f=0
-                    if dxyz: f = xyspeed*1+600*dz/dxyz #dxy/dxyz+1200*dz/dxyz
-                    else: f=xyspeed
-                    #print dxyz,dxy,f
-                    speed = " F%f"%f
-                    
-                previous = p2
-                
-
-                newline = "G1 X%f Y%f Z%f%s\n"%(p2[0],p2[1],p2[2],speed)
-                out_line_list.append(newline)
-            else:
-                if verbose: print line
-                out_line_list.append(line)
-                
-        layer.cmds = out_line_list
                             
 def translate(layerlist, delta, verbose=False, shiftlayer=False):
     for layer in layerlist :
@@ -326,94 +279,15 @@ def translate(layerlist, delta, verbose=False, shiftlayer=False):
                 out_line_list.append(line)
         layer.cmds = out_line_list
 
-def mergeFromXML(infilename, outfilename, verbose, debug):
-    fabTree = ElementTree(file = infilename)
-    for el in fabTree.iter(): el.tag = el.tag.lower()
-    
-    BUILDTRAY_OFFSET = [20,34,19.75]
-    TOOLHEAD_OFFSET  = [-10,63,-4.5]
-    
-    if debug:
-        BUILDTRAY_OFFSET = [0,0,0]
-        TOOLHEAD_OFFSET  = [0,0,0]
-    
-    lowercmds="G4 P2\nM340 P1 S600\nG4 P1000\nM340 P1 S0\n"
-    raisecmds="G4 P2\nM340 P1 S1200\nG4 P1000\nM340 P1 S0\n"
-    
-    
-    def nodeToFileOffset(node):
-        file = node.find("file").text
-        zoffset = float(node.find("zoffset").text)
-        ztranslate = float(node.find("ztranslate").text)
-        xcenter= float(node.find("xcenter").text)
-        ycenter = float(node.find("ycenter").text)
-        return [file,zoffset,ztranslate,xcenter,ycenter]
-    
-    ## Process file 
-    root = fabTree.getroot()
-    shellnode = root.find("shell")
-    padnodes = root.findall("pad")
-    topcoatnode = root.find("topcoat")
-    
-
-    
-    ## make shell layer list
-    [shellfile,zshell_offset,zshell,xshell,yshell] = nodeToFileOffset(shellnode)
-    shell_list = processFileIntoLayers(shellfile,True,verbose)
-    parity(shell_list,verbose)
-    (shell_min,shell_max) = findMinMax(shell_list)
-    if debug:
-        print "shell"
-        print findMinMax(shell_list)
-        
-        
-
-    translate(shell_list,[-shell_min[0]+BUILDTRAY_OFFSET[0],-shell_min[1]+BUILDTRAY_OFFSET[1],zshell+BUILDTRAY_OFFSET[2]],verbose)
-    #translate(shell_list,BUILDTRAY_OFFSET,verbose)
+def mergeFromXML(infilenames, outfilename):
+    verbose = False
     mergelist = []
-    mergelist.append(shell_list)
     
-    ## make Pad layer lists
-    
-    for padnode in padnodes:
-        [padfile,padz,locationz,pad_x,pad_y] = nodeToFileOffset(padnode)
-        pad_list = processFileIntoLayers(padfile,False,verbose)
-        parity(pad_list,verbose)
-        (pad_min,pad_max) = findMinMax(pad_list)
-        if debug:
-            print "pads"
-            print findMinMax(pad_list)
-        translate(pad_list,[pad_y-pad_min[0]+TOOLHEAD_OFFSET[0]+BUILDTRAY_OFFSET[0],
-                            pad_x*2-pad_min[1]+TOOLHEAD_OFFSET[1]+BUILDTRAY_OFFSET[1],
-                            locationz+TOOLHEAD_OFFSET[2]+padz+BUILDTRAY_OFFSET[1]],
-                            verbose,True)
-        #translate(pad_list,[TOOLHEAD_OFFSET[0],TOOLHEAD_OFFSET[1],TOOLHEAD_OFFSET[2]+padz],verbose)
-        #translate(pad_list,BUILDTRAY_OFFSET,verbose)
-        mergelist.append(pad_list)
-    
-    ## make TopCoat layer lists
-    [topcoat_file,z_topcoat,z_offset,x_offset,y_offset] = nodeToFileOffset(topcoatnode)
-    topcoat_list = processFileIntoLayers(topcoat_file,True,verbose)
-    parity(topcoat_list,verbose)
-    (topcoat_min,topcoat_max) = findMinMax(topcoat_list)
-    translate(topcoat_list,[-topcoat_min[0]+TOOLHEAD_OFFSET[0]+x_offset+BUILDTRAY_OFFSET[0],
-                            -topcoat_min[1]+TOOLHEAD_OFFSET[1]+y_offset,
-                            z_topcoat+z_offset+TOOLHEAD_OFFSET[2]+BUILDTRAY_OFFSET[2]],
-                            verbose, True)
-    #translate(topcoat_list,[TOOLHEAD_OFFSET[0]+x_offset,TOOLHEAD_OFFSET[1]+y_offset,TOOLHEAD_OFFSET[2]+z_offset],verbose)
-    #translate(topcoat_list,[BUILDTRAY_OFFSET[0],BUILDTRAY_OFFSET[1],BUILDTRAY_OFFSET[2]],verbose)
-    #setTopcoatSpeed(topcoat_list,1200,verbose)
-
-    
+    for file in infilenames:
+        layer_list = processFileIntoLayers(file,True,verbose)
+        mergelist.append(layer_list)
     
     output_cmd_list=[]
-    #write first files startup code to file dumps the rest of the startup codes
-    for cmd in mergelist[0][0].cmds:
-        output_cmd_list.append(cmd)
-        
-    for cmd_group in mergelist:
-        cmd_group.pop(0)
-    
     newlist = []
     for file in mergelist:
         for layer in file:
@@ -426,19 +300,7 @@ def mergeFromXML(infilename, outfilename, verbose, debug):
     
     previous_layer_type = 0
     
-    for cmd_layer in newlist:
-        if (previous_layer_type != cmd_layer.type):
-            if (previous_layer_type != Layer.displacement):
-                output_cmd_list.append(lowercmds)
-#                print "lower"
-            elif (previous_layer_type == Layer.displacement):
-#                print "Raise"
-                output_cmd_list.append(raisecmds)
-            else:
-#                print "type: %i"%cmd_layer.type
-                output_cmd_list.append(raisecmds)
-        
-#        print "layer type: %i"%cmd_layer.type
+    for cmd_layer in newlist:        
         previous_layer_type = cmd_layer.type
         for cmd in cmd_layer.cmds:
             output_cmd_list.append(cmd)
@@ -451,20 +313,19 @@ def mergeFromXML(infilename, outfilename, verbose, debug):
         pass
         outfile.write(line)
     
-    
-    for layer in topcoat_list:
-        for cmd in layer.cmds:
-            outfile.write(cmd)
-    
     print "done"
     
     
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        sys.exit('usage: test.py <xmlfile> <outputfile> [--verbose]')
-    infilename = sys.argv[1]
-    outfilename = sys.argv[2]
-    mergeFromXML(infilename,outfilename,'--verbose' in sys.argv, '--debug' in sys.argv )
+        print len(sys.argv)
+        for i in range(0,len(sys.argv)): print sys.argv[i]
+        sys.exit('usage: merge.py <input file a> <b> <c> ... <outputfile>')
+    infilenames =[]
+    for i in range(1,len(sys.argv)-1):
+        infilenames.append(sys.argv[i])
+    outfilename = sys.argv[-1]
+    mergeFromXML(infilenames,outfilename )
     
  

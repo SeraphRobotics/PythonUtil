@@ -178,10 +178,10 @@ def translateToValvetool(infile, outlist, verbose=False):
             
 if __name__ == '__main__':
     if len(sys.argv) < 4:
-        sys.exit('usage: test.py <filename> <speed_xy> <speed_z> [--verbose]')
+        sys.exit('usage: toValve.py <filename> <speed_xy> <speed_z> [--verbose]')
     infilename = sys.argv[1]
-    speedx = sys.argv[2]
-    speedz = sys.argv[3]
+    speedx = float(sys.argv[2])
+    speedz = float(sys.argv[3])
     
     
     outfilename = '%s.extrude%s' % os.path.splitext(infilename)
