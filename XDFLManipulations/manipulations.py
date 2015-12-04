@@ -1,7 +1,7 @@
 ########################Imports####################################################
 from xml.etree.ElementTree import ElementTree, Element 
 import xml.etree.ElementTree as etree
-from math import cos, sin, pi
+from math import cos, sin, pi, sqrt
 
 
 ######################## Global Defs ################################################
@@ -9,6 +9,11 @@ axes = ["x", "y", "z"]
 DEBUG = False
 ######################## Helper Functions ###########################################
 
+def dist(a,b):
+    x = a[0]-b[0]
+    y = a[1]-b[1]
+    z = a[2]-b[2]
+    return sqrt( x*x+y*y+z*z )
 
 
 def pointsListFromPathEl(pathEl):
@@ -78,6 +83,16 @@ def threshold(fabTree, threshold=0):
         zValue = float(path.find("point").find("z").text)
         if zValue <= threshold: fabTree.getroot().remove(path)
     return fabTree
+
+def distance(fabTree):
+    distance = 0
+    for path in fabTree.iter("path"):
+        pts = pointsListFromPathEl(path)
+        lastpt = pts[0]
+        for pt in pts:
+            distance += dist(pt,lastpt)
+            lastpt=pt
+    return distance
     
 def dimensions(fabTree, name=None):
     minvalues = [0, 0, 0]
@@ -355,6 +370,7 @@ if __name__ == '__main__':
         print " set clearance\tmanipulations.py setclearance 'filename' clearance (speed)"
         print " scale  \tmanipulations.py scale 'filename' x y z ('write name')"
         print " toFab  \tmanipulations.py toFab 'filename' ('write name')"
+        print " distance \tmanipulations.py distance 'filename'"
         
     else: 
         fabTree = ElementTree(file = sys.argv[2])
@@ -432,4 +448,6 @@ if __name__ == '__main__':
             
         elif todo == "toFab":
             fabTree=xdfl2fab(fabTree)
-            writeTree(sys.argv[3], fabTree)    
+            writeTree(sys.argv[3], fabTree)
+        elif todo == "distance":
+            print distance(fabTree)
