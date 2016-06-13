@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1d276bc4-9c39-44a8-962e-9073a8cb9c17}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile />
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId />
+    <InterpreterVersion />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+    <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Calibrator\METADATA.txt" />
+    <Content Include="Faxer\Faxing\Survey\Survey\word\media\image1.png" />
+    <Content Include="XDFL2GCode\Gui\BFB3k.jpg" />
+    <Content Include="XDFL2GCode\Gui\ccsl_logo_small.gif" />
+    <Content Include="XDFL2GCode\Gui\favicon.ico" />
+    <Content Include="XDFL2GCode\Gui\Main.ico" />
+    <Content Include="XDFL2GCode\Gui\makerbot.jpg" />
+    <Content Include="XDFL2GCode\Gui\reprap.jpg" />
+    <Content Include="XDFL2GCode\README.txt" />
+    <Content Include="XDFLVisualizer\Main.ico" />
+    <Content Include="XDFLVisualizer\ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Calibrator\calibrate.py" />
+    <Compile Include="Debug Visualizers\LoopVisualizer\LoopStack.py" />
+    <Compile Include="Debug Visualizers\LoopVisualizer\LoopStackMCU.py" />
+    <Compile Include="Debug Visualizers\LoopVisualizer\LoopStackVisualizer.py" />
+    <Compile Include="Debug Visualizers\LoopVisualizer\ui_LayerViewerWidget.py" />
+    <Compile Include="Debug Visualizers\LoopVisualizer\__init__.py" />
+    <Compile Include="Debug Visualizers\SegmentVisualizer\SegmentStack.py" />
+    <Compile Include="Debug Visualizers\SegmentVisualizer\SegmentStackMCU.py" />
+    <Compile Include="Debug Visualizers\SegmentVisualizer\SegmentStackVisualizer.py" />
+    <Compile Include="Debug Visualizers\SegmentVisualizer\ui_LayerViewerWidget.py" />
+    <Compile Include="Debug Visualizers\SegmentVisualizer\__init__.py" />
+    <Compile Include="Debug Visualizers\SliceStackVisualizer\SliceStack.py" />
+    <Compile Include="Debug Visualizers\SliceStackVisualizer\SliceStackMCU.py" />
+    <Compile Include="Debug Visualizers\SliceStackVisualizer\SliceStackVisualizer.py" />
+    <Compile Include="Debug Visualizers\SliceStackVisualizer\ui_LayerViewerWidget.py" />
+    <Compile Include="Debug Visualizers\SliceStackVisualizer\__init__.py" />
+    <Compile Include="Debug Visualizers\view.py" />
+    <Compile Include="Debug Visualizers\XDFLVisualizer\ui_LayerViewerWidget.py" />
+    <Compile Include="Debug Visualizers\XDFLVisualizer\XDFLFile.py" />
+    <Compile Include="Debug Visualizers\XDFLVisualizer\XDFLView.py" />
+    <Compile Include="Debug Visualizers\XDFLVisualizer\XDFLVisualizer.py" />
+    <Compile Include="Debug Visualizers\XDFLVisualizer\__init__.py" />
+    <Compile Include="FabFileManipulations\backlash.py" />
+    <Compile Include="FabFileManipulations\base.py" />
+    <Compile Include="FabFileManipulations\fab2XDFL.py" />
+    <Compile Include="FabFileManipulations\fixaxis.py" />
+    <Compile Include="FabFileManipulations\fixParity.py" />
+    <Compile Include="FabFileManipulations\gutter.py" />
+    <Compile Include="FabFileManipulations\manipulations.py" />
+    <Compile Include="FabFileManipulations\orthoticTrim.py" />
+    <Compile Include="FabFileManipulations\plastic.py" />
+    <Compile Include="FabFileManipulations\runM3onM2Interp.py" />
+    <Compile Include="FabFileManipulations\TestMaterials.py" />
+    <Compile Include="FabFileManipulations\vinylFab.py" />
+    <Compile Include="FabFileManipulations\__init__.py" />
+    <Compile Include="FabFileVisualizer\FabFileLoader.py" />
+    <Compile Include="FabFileVisualizer\FabFileVisualizer.py" />
+    <Compile Include="FabFileVisualizer\Point.py" />
+    <Compile Include="FabFileVisualizer\ui_LayerViewerWidget.py" />
+    <Compile Include="FabFileVisualizer\__init__.py" />
+    <Compile Include="Faxer\faxer.py" />
+    <Compile Include="Faxer\Faxing\Survey\faxer-UNIX.py" />
+    <Compile Include="Faxer\Faxing\Survey\faxer.py" />
+    <Compile Include="GcodeToValve\merge\merge.py" />
+    <Compile Include="GcodeToValve\merge\setup.py" />
+    <Compile Include="GcodeToValve\toValve\setup.py" />
+    <Compile Include="GcodeToValve\toValve\toValve.py" />
+    <Compile Include="mass Emailer\emailer.py" />
+    <Compile Include="Merger\merge.py" />
+    <Compile Include="Merger\setup.py" />
+    <Compile Include="PathingAlgoritm\CoatingAlgorithm.py" />
+    <Compile Include="PathingAlgoritm\FabFileLoader.py" />
+    <Compile Include="PathingAlgoritm\FabFileVisualizer.py" />
+    <Compile Include="PathingAlgoritm\Point.py" />
+    <Compile Include="PathingAlgoritm\ui_LayerViewerWidget.py" />
+    <Compile Include="PathingAlgoritm\__init__.py" />
+    <Compile Include="XDFL2GCode\Core\CommandGenerators.py" />
+    <Compile Include="XDFL2GCode\Core\Converter.py" />
+    <Compile Include="XDFL2GCode\Core\FabFileLoader.py" />
+    <Compile Include="XDFL2GCode\Core\Point.py" />
+    <Compile Include="XDFL2GCode\Core\PrinterConfig.py" />
+    <Compile Include="XDFL2GCode\Core\__init__.py" />
+    <Compile Include="XDFL2GCode\FabConverterGui.pyw" />
+    <Compile Include="XDFL2GCode\Gui\FabConverter_rc.py" />
+    <Compile Include="XDFL2GCode\Gui\ui_About.py" />
+    <Compile Include="XDFL2GCode\Gui\ui_FabConverter.py" />
+    <Compile Include="XDFL2GCode\Gui\__init__.py" />
+    <Compile Include="XDFL2GCode\setup.py" />
+    <Compile Include="XDFL2GCode\__init__.py" />
+    <Compile Include="XDFLManipulations\fab2XDFL.py" />
+    <Compile Include="XDFLManipulations\manipulations.py" />
+    <Compile Include="XDFLManipulations\setup.py" />
+    <Compile Include="XDFLManipulations\xdflTrim.py" />
+    <Compile Include="XDFLVisualizer\FabFileLoader.py" />
+    <Compile Include="XDFLVisualizer\FabFileVisualizer.py" />
+    <Compile Include="XDFLVisualizer\Point.py" />
+    <Compile Include="XDFLVisualizer\setup.py" />
+    <Compile Include="XDFLVisualizer\ui_LayerViewerWidget.py" />
+    <Compile Include="XDFLVisualizer\__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Calibrator" />
+    <Folder Include="Debug Visualizers" />
+    <Folder Include="Debug Visualizers\LoopVisualizer" />
+    <Folder Include="Debug Visualizers\SegmentVisualizer" />
+    <Folder Include="Debug Visualizers\SliceStackVisualizer" />
+    <Folder Include="Debug Visualizers\XDFLVisualizer" />
+    <Folder Include="FabFileManipulations" />
+    <Folder Include="FabFileVisualizer" />
+    <Folder Include="Faxer" />
+    <Folder Include="Faxer\Faxing\" />
+    <Folder Include="Faxer\Faxing\Survey" />
+    <Folder Include="Faxer\Faxing\Survey\Survey\" />
+    <Folder Include="Faxer\Faxing\Survey\Survey\word\" />
+    <Folder Include="Faxer\Faxing\Survey\Survey\word\media" />
+    <Folder Include="GcodeToValve\" />
+    <Folder Include="GcodeToValve\merge" />
+    <Folder Include="GcodeToValve\toValve" />
+    <Folder Include="mass Emailer" />
+    <Folder Include="Merger" />
+    <Folder Include="PathingAlgoritm" />
+    <Folder Include="XDFL2GCode" />
+    <Folder Include="XDFL2GCode\Core" />
+    <Folder Include="XDFL2GCode\Gui" />
+    <Folder Include="XDFLManipulations" />
+    <Folder Include="XDFLVisualizer" />
+  </ItemGroup>
+  <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />
+</Project>

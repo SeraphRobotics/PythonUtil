@@ -7,8 +7,11 @@ import sys
 from xml.etree.ElementTree import ElementTree, Element 
 import xml.etree.ElementTree as etree
 
-
-
+### DO NOT CHANGE UNLESS YOUR SURE
+XMLFile  = "Files.xml"
+OutFile = "Merged.gcode"
+RaiseCmd = "G91\nG1 Z%0.0f F%0.0f\nG90\n"
+#####
 
 class Layer:
     displacement = 1
@@ -70,7 +73,7 @@ def processFileIntoLayers(filename,isplastic,verbose):
             newlayer=Layer(z1[0])
             
         if(isplastic==True): newlayer.type = Layer.displacement
-        
+        #else: newlayer.stackz+=10;
         newlayer.cmds.append(line)
 
     cmd_group.append(newlayer)
@@ -169,8 +172,7 @@ def parity(layerlist, verbose=False):
                 if verbose: print line
                 out_line_list.append(line)
         layer.cmds = out_line_list
-    
-                            
+
 def translate(layerlist, delta, verbose=False, shiftlayer=False):
     for layer in layerlist :
         out_line_list=[]
@@ -279,15 +281,58 @@ def translate(layerlist, delta, verbose=False, shiftlayer=False):
                 out_line_list.append(line)
         layer.cmds = out_line_list
 
-def mergeFromXML(infilenames, outfilename):
-    verbose = False
-    mergelist = []
+def mergeFromXML(infilename, outfilename, verbose, debug):
+    fabTree = ElementTree(file = infilename)
+    for el in fabTree.iter(): el.tag = el.tag.lower()
+    root = fabTree.getroot()
+
+    clNode = root.find("clearance")
+    clearance = None
+    if clNode is not None: clearance = float(clNode.text)
+    zspeed = 600
+    zNode = root.find("clearanceSpeed")
+    if zNode: zspeed = float(zNode.text)*60
+    print "Clearance: ",clearance
+    print "Speed: ",zspeed
     
-    for file in infilenames:
-        layer_list = processFileIntoLayers(file,True,verbose)
-        mergelist.append(layer_list)
+    def nodeToFileOffset(node):
+        file = node.find("filename").text
+        zoffset = float(node.find("zoffset").text)
+        ztranslate = float(node.find("ztranslate").text)
+        xcenter= float(node.find("xcenter").text)
+        ycenter = float(node.find("ycenter").text)
+        return [file,zoffset,ztranslate,xcenter,ycenter]
+    
+    ## Process file 
+    fileNodes = root.findall("file")
+   
+    mergelist = []
+
+    
+    ## make Pad layer lists
+    
+    for gfilenode in fileNodes:
+        [gfilefile,gfilez,locationz,gfile_x,gfile_y] = nodeToFileOffset(gfilenode)
+        gfile_list = processFileIntoLayers(gfilefile,False,verbose)
+        (gfile_min,gfile_max) = findMinMax(gfile_list)
+        print gfilefile," ",gfile_min," ",gfile_max
+        translate(gfile_list,[gfile_y-gfile_min[0],
+                            gfile_x-gfile_min[1],
+                            locationz],
+                            verbose,True)
+        mergelist.append(gfile_list)
+
+
+    
     
     output_cmd_list=[]
+    #write first files startup code to file dumps the rest of the startup codes
+    for cmd in mergelist[0][0].cmds:
+        output_cmd_list.append(cmd)
+        
+    for cmd_group in mergelist:
+        cmd_group.pop(0)
+    
     newlist = []
     for file in mergelist:
         for layer in file:
@@ -300,8 +345,16 @@ def mergeFromXML(infilenames, outfilename):
     
     previous_layer_type = 0
     
-    for cmd_layer in newlist:        
-        previous_layer_type = cmd_layer.type
+    for cmd_layer in newlist:
+        if clearance:
+            rc = RaiseCmd%(clearance,zspeed)
+            z_shift = cmd_layer.cmds.pop(0)
+            xy = cmd_layer.cmds.pop(0)
+            
+            output_cmd_list.append(rc)
+            output_cmd_list.append(xy)
+            output_cmd_list.append(z_shift)
+            output_cmd_list.append(xy)
         for cmd in cmd_layer.cmds:
             output_cmd_list.append(cmd)
     
@@ -312,20 +365,17 @@ def mergeFromXML(infilenames, outfilename):
     for line in output_cmd_list:
         pass
         outfile.write(line)
+   
     
     print "done"
     
     
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print len(sys.argv)
-        for i in range(0,len(sys.argv)): print sys.argv[i]
-        sys.exit('usage: merge.py <input file a> <b> <c> ... <outputfile>')
-    infilenames =[]
-    for i in range(1,len(sys.argv)-1):
-        infilenames.append(sys.argv[i])
-    outfilename = sys.argv[-1]
-    mergeFromXML(infilenames,outfilename )
+    #if len(sys.argv) < 2:
+    #    sys.exit('usage: test.py <xmlfile> <outputfile> [--verbose]')
+    infilename = XMLFile#sys.argv[1]
+    outfilename = OutFile#sys.argv[2]
+    mergeFromXML(infilename,outfilename,'--verbose' in sys.argv, '--debug' in sys.argv )
     
  

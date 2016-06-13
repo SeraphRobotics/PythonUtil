@@ -1,0 +1,18 @@
+<Files>
+  <clearance>10</clearance>
+  <clearanceSpeed>20</clearanceSpeed>
+	<file>
+		<filename>Test.gcode</filename>
+		<zoffset>0</zoffset>
+		<ztranslate>0</ztranslate>
+		<xcenter>100</xcenter>
+		<ycenter>100</ycenter>
+	</file>
+	<file>
+		<filename>Test.gcode</filename>
+		<zoffset>0</zoffset>
+		<ztranslate>0</ztranslate>
+		<xcenter>10</xcenter>
+		<ycenter>10</ycenter>
+	</file>	
+</Files>	
